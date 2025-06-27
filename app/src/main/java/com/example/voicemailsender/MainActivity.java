@@ -9,13 +9,13 @@ import android.speech.tts.TextToSpeech;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -23,10 +23,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private Button btnSpeak, btnSendEmail;
     private TextView tvResult;
-
 
     private int step = 0;
     private String email = "", subject = "", message = "";
@@ -35,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //slide Bar
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,44 +46,28 @@ public class MainActivity extends AppCompatActivity {
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment())
-                .commit();
-
 
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
                 drawerLayout.closeDrawer(GravityCompat.START);
-                // Handle the Home option
-
             } else if (id == R.id.nav_team) {
                 Intent intent = new Intent(this, AboutTeamActivity.class);
                 startActivity(intent);
-                // Handle the About Team option
             } else if (id == R.id.nav_app) {
                 Intent intent = new Intent(this, AboutAppActivity.class);
                 startActivity(intent);
-                // Handle the About App option
-
             }
 
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
 
-        //slide Bar over
-
-
-
         btnSpeak = findViewById(R.id.btnSpeak);
         btnSendEmail = findViewById(R.id.btnSendEmail);
         tvResult = findViewById(R.id.tvResult);
 
-
-        // Initialize TextToSpeech
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 tts.setLanguage(Locale.US);
@@ -94,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnSpeak.setOnClickListener(view -> {
             step = 0;
-            promptAndSpeak();  // Speak and then listen
+            promptAndSpeak();
         });
 
         btnSendEmail.setOnClickListener(view -> {
@@ -104,6 +86,28 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please complete voice input first.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_home);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_voice) {
+                startActivity(new Intent(getApplicationContext(), VoiceActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return false;
+        });
+
     }
 
     private void promptAndSpeak() {
@@ -123,8 +127,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         tts.speak(prompt, TextToSpeech.QUEUE_FLUSH, null, null);
-
-        new Handler().postDelayed(this::startVoiceInput, 2000); // Delay before listening
+        new Handler().postDelayed(this::startVoiceInput, 2000);
     }
 
     private void startVoiceInput() {
@@ -147,37 +150,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (result != null && !result.isEmpty()) {
                 switch (step) {
                     case 0:
-                        String spokenText = result.get(0);
-//                        tvResult.setText(spokenText); // Display what the user said
-                        email = result.get(0)
-                                .toLowerCase()
-                                .replaceAll("\\s+", "") // removes all spaces (single or multiple)
-                                .replace("at", "@")
-                                .replace("dot", ".");
-
+                        email = result.get(0).toLowerCase().replaceAll("\\s+", "").replace("at", "@").replace("dot", ".");
                         Toast.makeText(this, "Email: " + email, Toast.LENGTH_SHORT).show();
                         step++;
                         promptAndSpeak();
                         break;
                     case 1:
-                        String spokenSubject = result.get(0);
-//                        tvResult.setText(spokenSubject); // Display spoken subject
-
                         subject = result.get(0);
-
                         Toast.makeText(this, "Subject: " + subject, Toast.LENGTH_SHORT).show();
                         step++;
                         promptAndSpeak();
                         break;
                     case 2:
-                        String spokenMessage = result.get(0);
-//                        tvResult.setText(spokenMessage); // Display spoken message
                         message = result.get(0);
                         Toast.makeText(this, "Message: " + message, Toast.LENGTH_SHORT).show();
                         break;
@@ -196,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
             emailIntent.putExtra(Intent.EXTRA_TEXT, message);
             emailIntent.setPackage("com.google.android.gm");
-//            emailIntent.setPackage("com.microsoft.office.outlook");
 
             try {
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
@@ -206,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Please enter both email ID and message.", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -218,6 +205,3 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
-
-
-// Version 2.0

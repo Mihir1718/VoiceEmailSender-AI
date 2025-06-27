@@ -8,13 +8,11 @@
     tools:context=".MainActivity">
 
     <!-- MAIN CONTENT -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!-- Toolbar (Hamburger icon appears here) -->
-
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -24,16 +22,11 @@
             app:titleTextColor="@color/white"
             android:titleTextColor="@android:color/white" />
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
-
-
-        <!-- Content inside your screen -->
+        <!-- Fragment or Page Content -->
         <LinearLayout
+            android:id="@+id/mainContent"
+            android:layout_below="@id/toolbar"
+            android:layout_above="@id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -42,8 +35,9 @@
 
             <TextView
                 android:id="@+id/tvResult"
-                android:layout_width="965dp"
-                android:layout_height="513dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="#DDDDDD"
                 android:padding="20dp"
                 android:text="Your spoken input will appear here..."
@@ -63,7 +57,21 @@
                 android:layout_marginTop="8dp"
                 android:text="Send Email" />
         </LinearLayout>
-    </LinearLayout>
+
+        <!-- Bottom Navigation -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bottom_nav_background"
+            app:itemIconSize="35dp"
+            app:menu="@menu/bottom_nav_menu"
+
+            app:itemTextColor="@color/nav_selector"
+            app:labelVisibilityMode="labeled" />
+
+    </RelativeLayout>
 
     <!-- DRAWER MENU -->
     <com.google.android.material.navigation.NavigationView
@@ -73,4 +81,5 @@
         android:layout_gravity="start"
         app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/drawer_header" />
+
 </androidx.drawerlayout.widget.DrawerLayout>
