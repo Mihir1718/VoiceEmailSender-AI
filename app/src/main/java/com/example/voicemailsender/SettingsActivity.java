@@ -42,6 +42,8 @@ public class SettingsActivity extends AppCompatActivity {
         // -------- Toolbar and Drawer Setup --------
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name3));
+
 
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);

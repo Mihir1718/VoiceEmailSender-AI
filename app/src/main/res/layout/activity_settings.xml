@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#222222"
-            android:title="Settings"/>
+            android:title="Settings"
+            app:titleTextColor="@color/white" />
 
         <!-- Page Content -->
         <ScrollView
@@ -46,6 +47,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Enable Notifications"
+                        tools:textColor="@color/black"
                         android:textSize="16sp" />
 
                     <Switch
@@ -68,6 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Dark Theme"
+                        tools:textColor="@color/black"
                         android:textSize="16sp" />
 
                     <Switch

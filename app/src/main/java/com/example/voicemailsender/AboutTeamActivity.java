@@ -40,6 +40,8 @@ public class AboutTeamActivity extends AppCompatActivity {
 
         // Setup toolbar
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name4));
+
 
         // Setup drawer toggle
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name1">Voice Email Sender</string>
+    <string name="app_name1">Voice E-mail Sender</string>
+    <string name="app_name2">AI E-mail Sender</string>
+    <string name="app_name3">Settings</string>
+    <string name="app_name4">About Team</string>
+    <string name="app_name5">About App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

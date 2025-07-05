@@ -44,7 +44,7 @@
                     android:layout_marginBottom="25dp"
                     android:padding="12dp"
                     android:text="About This App"
-                    android:textColor="#456987"
+                    tools:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:textColor="#444444"
+                    tools:textColor="@color/black"
                     android:textSize="16sp"
                     android:lineSpacingExtra="6dp"
                     android:textStyle="normal"

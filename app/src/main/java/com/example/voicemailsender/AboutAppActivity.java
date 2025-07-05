@@ -38,6 +38,8 @@ public class AboutAppActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationView);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name5));
+
 
         // Set up the hamburger icon
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

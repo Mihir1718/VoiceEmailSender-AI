@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:text="Development Team"
-                android:textColor="@color/black"
+                tools:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -75,7 +75,7 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="Tejas Panchal"
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="C.E."
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -112,7 +112,7 @@
                         android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:text="Mihir Patel"
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -149,7 +149,7 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="Purvanshu \n Machhi"
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -158,7 +158,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="C.E."
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -186,7 +186,7 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="Margi Suthar"
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -195,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="I.T."
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -223,7 +223,7 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="Deep Patel"
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -232,7 +232,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="I.T."
-                        android:textColor="@color/black"
+                        tools:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
