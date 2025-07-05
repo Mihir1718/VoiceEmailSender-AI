@@ -4,5 +4,13 @@
     <item name="cornerFamily">rounded</item>
     <item name="cornerSize">50%</item>
 </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here -->
+        <item name="colorPrimary">#222222</item>
+        <item name="colorPrimaryVariant">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:windowBackground">?android:windowBackground</item>
+    </style>
+
 
 </resources>

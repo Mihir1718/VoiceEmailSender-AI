@@ -2,6 +2,7 @@ package com.example.voicemailsender;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONObject;
 
@@ -41,12 +50,47 @@ public class VoiceActivity extends AppCompatActivity {
     private String recipient = "", subject = "", message = "";
     private int wordCount = 20;
 
-    private final String OPENAI_API_KEY = "AIzaSyDZ7u3gxG-G0iwKVKESqbiws8bq1kmI4jQ"; // 🔒 Replace with your key
+    private final String OPENAI_API_KEY = "AIzaSyDZ7u3gxG-G0iwKVKESqbiws8bq1kmI4jQ"; // Replace with your key
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice);
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        boolean darkMode = prefs.getBoolean("dark_mode", false);
+
+        AppCompatDelegate.setDefaultNightMode(
+                darkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+        );
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navigationView = findViewById(R.id.navigationView);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else if (id == R.id.nav_team) {
+                Intent intent = new Intent(this, AboutTeamActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_app) {
+                Intent intent = new Intent(this, AboutAppActivity.class);
+                startActivity(intent);
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
 
         btnSpeak = findViewById(R.id.btnSpeak);
         tvStatus = findViewById(R.id.tvVoiceStatus);
@@ -60,6 +104,25 @@ public class VoiceActivity extends AppCompatActivity {
             promptAndSpeak("To whom do you want to send the email?");
             new Handler().postDelayed(() -> startVoiceInput(REQ_EMAIL), 2500);
         });
+
+        // Bottom Navigation setup
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_voice);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            } else if (id == R.id.nav_voice) {
+                return true; // Already here
+            } else if (id == R.id.nav_settings) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+            overridePendingTransition(0, 0);
+            return true;
+        });
+
     }
 
     private void promptAndSpeak(String text) {
@@ -91,27 +154,21 @@ public class VoiceActivity extends AppCompatActivity {
 
             switch (requestCode) {
                 case REQ_EMAIL:
-                    recipient = spoken
-                            .replace(" at ", "@")
-                            .replace(" dot ", ".")
-                            .replaceAll("\\s+", "");
+                    recipient = spoken.replace(" at ", "@").replace(" dot ", ".").replaceAll("\\s+", "");
                     promptAndSpeak("What is the subject of the email?");
                     new Handler().postDelayed(() -> startVoiceInput(REQ_SUBJECT), 2500);
                     break;
-
                 case REQ_SUBJECT:
                     subject = spoken;
                     promptAndSpeak("How many words should the message contain?");
                     new Handler().postDelayed(() -> startVoiceInput(REQ_WORDS), 2500);
                     break;
-
                 case REQ_WORDS:
                     try {
                         wordCount = Integer.parseInt(spoken.replaceAll("[^0-9]", ""));
                     } catch (NumberFormatException e) {
                         wordCount = 20;
                     }
-
                     tvStatus.setText("Generating message using AI...");
                     generateAIMessage(recipient, subject, wordCount);
                     break;
@@ -121,15 +178,12 @@ public class VoiceActivity extends AppCompatActivity {
 
     private void generateAIMessage(String email, String subject, int wordCount) {
         OkHttpClient client = new OkHttpClient();
-
         String prompt = "Generate a professional email message of approximately " + wordCount + " words about: " + subject;
 
         JSONObject json = new JSONObject();
         try {
             json.put("model", "gpt-3.5-turbo");
-            json.put("messages", new org.json.JSONArray()
-                    .put(new JSONObject().put("role", "user").put("content", prompt))
-            );
+            json.put("messages", new org.json.JSONArray().put(new JSONObject().put("role", "user").put("content", prompt)));
         } catch (Exception e) {
             e.printStackTrace();
         }

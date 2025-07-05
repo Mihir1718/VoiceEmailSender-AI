@@ -1,15 +1,18 @@
 package com.example.voicemailsender;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        boolean darkMode = prefs.getBoolean("dark_mode", false);
+
+        AppCompatDelegate.setDefaultNightMode(
+                darkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+        );
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,7 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
         btnSendEmail.setOnClickListener(view -> {
             if (!email.isEmpty() && !subject.isEmpty() && !message.isEmpty()) {
-                sendEmail();
+                if (isValidEmail(email)) {
+                    sendEmail();
+                } else {
+                    Toast.makeText(this, "Invalid email address.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Please complete voice input first.", Toast.LENGTH_SHORT).show();
             }
@@ -107,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
     }
 
     private void promptAndSpeak() {
@@ -174,6 +186,10 @@ public class MainActivity extends AppCompatActivity {
                 tvResult.setText(String.format("Email: %s\n\nSubject: %s\n\nMessage: \n%s", email, subject, message));
             }
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void sendEmail() {

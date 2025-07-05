@@ -1,50 +1,76 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient">
+    tools:context=".VoiceActivity"> <!-- Change for each activity -->
 
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <!-- MAIN CONTENT -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#222222"
-        android:title="Voice"
-        app:titleTextColor="@android:color/white"/>
-<!-- content -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:background="@drawable/background_gradient">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvVoiceStatus"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Press Speak to start..."
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:layout_marginBottom="20dp"/>
+            android:layout_height="?attr/actionBarSize"
+            android:background="#222222"
+            android:title="Voice"
+            app:titleTextColor="@android:color/white" />
 
-        <Button
-            android:id="@+id/btnSpeak"
+        <!-- Activity Content -->
+        <LinearLayout
+            android:id="@+id/mainContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvVoiceStatus"
-            android:text="Speak"
-            android:layout_marginTop="20dp"/>
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:layout_above="@id/bottom_navigation"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/background_gradient">
+
+            <TextView
+                android:id="@+id/tvVoiceStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Press Speak to start..."
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="20dp" />
+
+            <Button
+                android:id="@+id/btnSpeak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Speak"
+                android:layout_marginTop="20dp" />
+
+        </LinearLayout>
+
+        <!-- Bottom Navigation -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/bottom_nav_background"
+            app:itemIconSize="35dp"
+            app:menu="@menu/bottom_nav_menu"
+            app:itemTextColor="@color/nav_selector"
+            app:labelVisibilityMode="labeled" />
+
     </RelativeLayout>
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/bottom_nav_background"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconTint="@color/nav_selector"
-        app:itemTextColor="@color/nav_selector"
-        app:itemIconSize="30dp" />
-</RelativeLayout>
+
+    <!-- DRAWER MENU -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/drawer_header" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
