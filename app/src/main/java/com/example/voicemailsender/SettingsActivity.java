@@ -126,9 +126,19 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         btnContactSupport.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:1234567890"));
-            startActivity(intent);
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:vbes2025@gmail.com")); // Replace with actual email
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Support Request");
+            intent.putExtra(Intent.EXTRA_TEXT, "Hello, I need help with...");
+
+            try {
+                intent.setPackage("com.google.android.gm"); // Force open Gmail app
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(this, "Gmail app not found", Toast.LENGTH_SHORT).show();
+            }
         });
+
 
         btnManagePermissions.setOnClickListener(v -> {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
