@@ -9,7 +9,6 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,15 +27,18 @@ import okhttp3.*;
 
 public class VoiceActivity extends AppCompatActivity {
 
-    private static final int REQ_EMAIL = 101;
-    private static final int REQ_SUBJECT = 102;
-    private static final int REQ_WORDS = 103;
+    private static final int REQ_EMAIL = 100;
+    private static final int REQ_SUBJECT = 101;
+    private static final int REQ_WORDS = 102;
+    private static final int REQ_GREETING = 103;
+    private static final int REQ_CLOSING = 104;
 
     private TextToSpeech tts;
-    private TextView txtSubject, txtMessage, txtTo;
-    private Button btnStart;
+    private TextView txtTo, txtSubject, txtMessage;
+    private Button btnSpeak;
 
     private String email = "", subject = "", message = "";
+    private String greeting = "", closing = "";
     private int wordCount = 50;
 
     private final String GEMINI_API_KEY = "AIzaSyBAbHtk5n-mtcQfPOsclzS9hlNFoqc1fks";
@@ -49,14 +51,14 @@ public class VoiceActivity extends AppCompatActivity {
         txtTo = findViewById(R.id.txtTo);
         txtSubject = findViewById(R.id.txtSubject);
         txtMessage = findViewById(R.id.txtMessage);
-        btnStart = findViewById(R.id.btnSpeak);
+        btnSpeak = findViewById(R.id.btnSpeak);
 
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS)
                 tts.setLanguage(Locale.US);
         });
 
-        btnStart.setOnClickListener(v -> promptEmail());
+        btnSpeak.setOnClickListener(v -> promptEmail());
     }
 
     private void speak(String text) {
@@ -65,21 +67,27 @@ public class VoiceActivity extends AppCompatActivity {
 
     private void promptEmail() {
         speak("Please say the recipient's email address.");
-        new Handler().postDelayed(this::startVoiceRecognitionEmail, 3000);
-    }
-
-    private void startVoiceRecognitionEmail() {
-        listen(REQ_EMAIL);
+        new Handler().postDelayed(() -> listen(REQ_EMAIL), 3000);
     }
 
     private void promptSubject() {
-        speak("Now, say the subject of your email.");
+        speak("Now say the subject of the email.");
         new Handler().postDelayed(() -> listen(REQ_SUBJECT), 3000);
     }
 
     private void promptWordCount() {
         speak("How many words should the message be?");
         new Handler().postDelayed(() -> listen(REQ_WORDS), 3000);
+    }
+
+    private void promptGreeting() {
+        speak("Please say the greeting like Dear Mihir or Respected Sir.");
+        new Handler().postDelayed(() -> listen(REQ_GREETING), 3000);
+    }
+
+    private void promptClosing() {
+        speak("Please say the closing like Sincerely Mihir or Thankfully Dip.");
+        new Handler().postDelayed(() -> listen(REQ_CLOSING), 3000);
     }
 
     private void listen(int requestCode) {
@@ -98,11 +106,13 @@ public class VoiceActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if (result == null || result.size() == 0) return;
+            if (result == null || result.isEmpty()) return;
 
             switch (requestCode) {
                 case REQ_EMAIL:
-                    email = result.get(0).replaceAll(" ", "").replace("at", "@").replace("dot", ".");
+                    email = result.get(0).replaceAll(" ", "")
+                            .replace("at the rate", "@")
+                            .replace("dot", ".");
                     txtTo.setText("To: " + email);
                     promptSubject();
                     break;
@@ -119,6 +129,16 @@ public class VoiceActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         wordCount = 50;
                     }
+                    promptGreeting();
+                    break;
+
+                case REQ_GREETING:
+                    greeting = result.get(0).trim();
+                    promptClosing();
+                    break;
+
+                case REQ_CLOSING:
+                    closing = result.get(0).trim();
                     fetchAIMessage();
                     break;
             }
@@ -129,7 +149,12 @@ public class VoiceActivity extends AppCompatActivity {
         speak("Generating your email using Gemini AI. Please wait.");
         OkHttpClient client = new OkHttpClient();
 
-        String prompt = "Write an email on the subject: " + subject + " in about " + wordCount + " words.";
+        String prompt = "Write a professional email to " + email +
+                " on the subject: " + subject +
+                " in about " + wordCount + " words. " +
+                "Start the email with the greeting: '" + greeting +
+                "' and end with the closing: '" + closing + "'.";
+
         String jsonBody = "{ \"contents\": [{ \"parts\": [{ \"text\": \"" + prompt + "\" }] }] }";
 
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
@@ -148,15 +173,12 @@ public class VoiceActivity extends AppCompatActivity {
 
             @Override public void onResponse(Call call, Response response) throws IOException {
                 String responseData = Objects.requireNonNull(response.body()).string();
-                int statusCode = response.code();
-                Log.e("GEMINI_RESPONSE_CODE", "HTTP " + statusCode);
-                Log.e("GEMINI_RESPONSE", responseData);
+                Log.d("GEMINI_RESPONSE", responseData);
 
                 try {
                     JSONObject obj = new JSONObject(responseData);
                     if (obj.has("error")) {
-                        JSONObject error = obj.getJSONObject("error");
-                        String errorMsg = error.optString("message", "Unknown Gemini error");
+                        String errorMsg = obj.getJSONObject("error").optString("message", "Unknown error");
                         throw new Exception("Gemini Error: " + errorMsg);
                     }
 
@@ -180,8 +202,6 @@ public class VoiceActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void sendEmail() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
