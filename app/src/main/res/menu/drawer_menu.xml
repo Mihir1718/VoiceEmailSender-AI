@@ -13,4 +13,8 @@
         android:id="@+id/nav_app"
         android:icon="@drawable/ic_app"
         android:title="About App" />
+    <item
+        android:id="@+id/nav_share"
+        android:title="Share App"
+        android:icon="@drawable/ic_share" />
 </menu>

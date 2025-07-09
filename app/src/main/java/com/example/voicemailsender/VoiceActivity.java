@@ -117,6 +117,18 @@ public class VoiceActivity extends AppCompatActivity {
             return false;
         });
 
+
+
+    }
+    private void shareAppLink() {
+        String shareBody = "Check out this amazing Voice Email Sender app:\n\n" +
+                "https://drive.google.com/file/d/your_apk_file_id/view?usp=sharing"; // 🔁 Replace with your APK link
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Voice Email Sender App");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(shareIntent, "Share App via"));
     }
 
     private void speak(String text) {

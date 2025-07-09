@@ -41,12 +41,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="10dp">
+                    <ImageView
+                        android:src="@drawable/ic_notifiy"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Enable Notifications"
+                        android:text="  Enable Notifications"
                         tools:textColor="@color/black"
                         android:textSize="16sp" />
 
