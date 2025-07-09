@@ -119,7 +119,7 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="69dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/bottom_nav_background"
             app:itemIconSize="24dp"

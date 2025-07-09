@@ -13,11 +13,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -32,14 +40,17 @@ public class VoiceActivity extends AppCompatActivity {
     private static final int REQ_WORDS = 102;
     private static final int REQ_GREETING = 103;
     private static final int REQ_CLOSING = 104;
+    private static final int REQ_ATTACHMENT_CONFIRM = 105;
+    private static final int REQ_ATTACHMENT_PATH = 106;
 
     private TextToSpeech tts;
     private TextView txtTo, txtSubject, txtMessage;
     private Button btnSpeak;
 
     private String email = "", subject = "", message = "";
-    private String greeting = "", closing = "";
+    private String greeting = "", closing = "", attachmentPath = "";
     private int wordCount = 50;
+    private boolean isAttachmentRequired = false;
 
     private final String GEMINI_API_KEY = "AIzaSyBAbHtk5n-mtcQfPOsclzS9hlNFoqc1fks";
 
@@ -47,6 +58,34 @@ public class VoiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navigationView = findViewById(R.id.navigationView);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else if (id == R.id.nav_team) {
+                Intent intent = new Intent(this, AboutTeamActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_app) {
+                Intent intent = new Intent(this, AboutAppActivity.class);
+                startActivity(intent);
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
 
         txtTo = findViewById(R.id.txtTo);
         txtSubject = findViewById(R.id.txtSubject);
@@ -59,6 +98,25 @@ public class VoiceActivity extends AppCompatActivity {
         });
 
         btnSpeak.setOnClickListener(v -> promptEmail());
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_voice);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_voice) {
+                return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return false;
+        });
+
     }
 
     private void speak(String text) {
@@ -90,6 +148,16 @@ public class VoiceActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> listen(REQ_CLOSING), 3000);
     }
 
+    private void promptAttachmentConfirmation() {
+        speak("Is there any attachment? Please say Yes or No.");
+        new Handler().postDelayed(() -> listen(REQ_ATTACHMENT_CONFIRM), 3000);
+    }
+
+    private void promptAttachmentPath() {
+        speak("Please say or paste the full path of the file to attach.");
+        new Handler().postDelayed(() -> listen(REQ_ATTACHMENT_PATH), 3000);
+    }
+
     private void listen(int requestCode) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -110,12 +178,23 @@ public class VoiceActivity extends AppCompatActivity {
 
             switch (requestCode) {
                 case REQ_EMAIL:
-                    email = result.get(0).replaceAll(" ", "")
+                    email = result.get(0)
+                            .replaceAll(" ", "")
+                            .replace("attherate", "@")
                             .replace("at the rate", "@")
                             .replace("dot", ".");
-                    txtTo.setText("To: " + email);
-                    promptSubject();
+
+                    // Validate email using Android's built-in pattern
+                    if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        txtTo.setText("To: " + email);
+                        promptSubject();
+                    } else {
+                        txtTo.setText("Invalid email: " + email);
+                        speak("That doesn't seem like a valid email. Please try again.");
+                        new Handler().postDelayed(() -> listen(REQ_EMAIL), 4000);
+                    }
                     break;
+
 
                 case REQ_SUBJECT:
                     subject = result.get(0);
@@ -131,14 +210,30 @@ public class VoiceActivity extends AppCompatActivity {
                     }
                     promptGreeting();
                     break;
-
+//greeting
                 case REQ_GREETING:
                     greeting = result.get(0).trim();
                     promptClosing();
                     break;
-
+//closing
                 case REQ_CLOSING:
                     closing = result.get(0).trim();
+                    promptAttachmentConfirmation();
+                    break;
+// attachment
+                case REQ_ATTACHMENT_CONFIRM:
+                    String confirmation = result.get(0).toLowerCase();
+                    if (confirmation.contains("yes")) {
+                        isAttachmentRequired = true;
+                        promptAttachmentPath();
+                    } else {
+                        isAttachmentRequired = false;
+                        fetchAIMessage();
+                    }
+                    break;
+
+                case REQ_ATTACHMENT_PATH:
+                    attachmentPath = result.get(0).trim();
                     fetchAIMessage();
                     break;
             }
@@ -206,10 +301,21 @@ public class VoiceActivity extends AppCompatActivity {
     private void sendEmail() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
+        emailIntent.setType("*/*");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+        if (isAttachmentRequired && !attachmentPath.isEmpty()) {
+            File file = new File(attachmentPath);
+            if (file.exists()) {
+                Uri fileUri = Uri.fromFile(file);
+                emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            } else {
+                Toast.makeText(this, "Attachment file not found at provided path.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         emailIntent.setPackage("com.google.android.gm");
 
         try {
