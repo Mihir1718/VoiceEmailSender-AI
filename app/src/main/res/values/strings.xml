@@ -6,4 +6,7 @@
     <string name="app_name5">About App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- ✅ Required for Gmail API login -->
+    <string name="default_web_client_id">399502980503-b0hhl9e7jf1445s038di04bhce7cd1u5.apps.googleusercontent.com</string>
 </resources>

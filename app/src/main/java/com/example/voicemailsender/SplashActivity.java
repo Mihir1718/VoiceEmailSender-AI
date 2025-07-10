@@ -29,7 +29,8 @@ public class SplashActivity extends AppCompatActivity {
         logo.startAnimation(fadeIn);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            startActivity(new Intent(SplashActivity.this, GoogleLoginActivity.class));
+
             finish();
         }, 2000);
     }

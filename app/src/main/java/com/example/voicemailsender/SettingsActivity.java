@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,20 +18,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.gms.auth.api.signin.*;
+import com.google.firebase.auth.*;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private BottomNavigationView bottomNav;
     private Switch switchNotifications, switchTheme;
-    private Button btnVisitWebsite, btnContactSupport, btnManagePermissions;
+    private Button btnVisitWebsite, btnContactSupport, btnManagePermissions, logoutBtn;
+    private TextView nameText, emailText;
+    private ImageView profileImage;
+
+    private FirebaseAuth auth;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Apply dark mode early (before view load)
+        // Apply dark mode early
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
         boolean darkMode = prefs.getBoolean("dark_mode", false);
         AppCompatDelegate.setDefaultNightMode(
@@ -44,7 +54,6 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name3));
 
-
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navigationView);
 
@@ -58,9 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
-            } else if (id == R.id.nav_team) {
-                startActivity(new Intent(this, AboutTeamActivity.class));
-            } else if (id == R.id.nav_app) {
+            }  else if (id == R.id.nav_app) {
                 startActivity(new Intent(this, AboutAppActivity.class));
             }
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -87,12 +94,16 @@ public class SettingsActivity extends AppCompatActivity {
             return false;
         });
 
-        // -------- Switches and Buttons --------
+        // -------- Views --------
         switchNotifications = findViewById(R.id.switchNotifications);
         switchTheme = findViewById(R.id.switchTheme);
         btnVisitWebsite = findViewById(R.id.btnVisitWebsite);
         btnContactSupport = findViewById(R.id.btnContactSupport);
         btnManagePermissions = findViewById(R.id.btnManagePermissions);
+        logoutBtn = findViewById(R.id.logoutBtn);
+        nameText = findViewById(R.id.nameText);
+        emailText = findViewById(R.id.emailText);
+        profileImage = findViewById(R.id.profileImage);
 
         switchTheme.setChecked(darkMode);
 
@@ -100,19 +111,11 @@ public class SettingsActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = getSharedPreferences("settings", MODE_PRIVATE).edit();
             editor.putBoolean("dark_mode", isChecked);
             editor.apply();
-
-            // Set mode globally
             AppCompatDelegate.setDefaultNightMode(
                     isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
             );
-
-            // Restart without flicker
-            Intent intent = getIntent();
-            finish();
-            startActivity(intent);
-            overridePendingTransition(0, 0);
+            recreate();
         });
-
 
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Toast.makeText(this,
@@ -127,24 +130,48 @@ public class SettingsActivity extends AppCompatActivity {
 
         btnContactSupport.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:vbes2025@gmail.com")); // Replace with actual email
+            intent.setData(Uri.parse("mailto:vbes2025@gmail.com"));
             intent.putExtra(Intent.EXTRA_SUBJECT, "Support Request");
             intent.putExtra(Intent.EXTRA_TEXT, "Hello, I need help with...");
-
             try {
-                intent.setPackage("com.google.android.gm"); // Force open Gmail app
+                intent.setPackage("com.google.android.gm");
                 startActivity(intent);
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(this, "Gmail app not found", Toast.LENGTH_SHORT).show();
             }
         });
 
-
         btnManagePermissions.setOnClickListener(v -> {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             Uri uri = Uri.fromParts("package", getPackageName(), null);
             intent.setData(uri);
             startActivity(intent);
+        });
+
+        // -------- Firebase + Google Sign-in --------
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+            nameText.setText(user.getDisplayName());
+            emailText.setText(user.getEmail());
+            Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
+        }
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        logoutBtn.setOnClickListener(v -> {
+            auth.signOut();
+            googleSignInClient.signOut().addOnCompleteListener(task -> {
+                Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, GoogleLoginActivity.class));
+                finish();
+            });
         });
     }
 

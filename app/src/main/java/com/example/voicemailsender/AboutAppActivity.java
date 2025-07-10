@@ -52,6 +52,9 @@ public class AboutAppActivity extends AppCompatActivity {
 
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            class AboutTeamActivity {
+            }
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
