@@ -60,8 +60,8 @@ public class AboutAppActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_home) {
                     startActivity(new Intent(AboutAppActivity.this, MainActivity.class));
-                } else if (id == R.id.nav_team) {
-                    startActivity(new Intent(AboutAppActivity.this, AboutTeamActivity.class));
+                } else if (id == R.id.nav_inbox) {
+                    startActivity(new Intent(AboutAppActivity.this, InboxActivity.class));
                 } else if (id == R.id.nav_app) {
                     // Already on About App
                 }

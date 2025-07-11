@@ -23,6 +23,9 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "1.33.2" }
+google-api-client-gson = { group = "com.google.api-client", name = "google-api-client-gson", version = "1.33.2" }
+google-api-services-gmail = { group = "com.google.apis", name = "google-api-services-gmail", version = "v1-rev20230125-2.0.0" }
 
 # 🆕 New libraries for AI & voice
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

@@ -31,6 +31,7 @@
         <activity android:name=".VoiceActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".AboutAppActivity" />
+        <activity android:name=".InboxActivity" />
 
 
     </application>

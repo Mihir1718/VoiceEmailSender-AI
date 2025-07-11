@@ -5,15 +5,16 @@
     <!-- Background color -->
 <!--    <solid android:color="#015c94" />-->
     <gradient xmlns:android="http://schemas.android.com/apk/res/android"
-        android:type="linear"
-        android:angle="45"
+        android:type="sweep"
+        android:centerX="0.5"
+        android:centerY="0.5"
         android:startColor="#006c7a"
         android:endColor="#10296e"
         android:gradientRadius="500"
         android:centerColor="#33007a" />
 
     <!-- Corner radius -->
-    <corners android:radius="25dp" />
+    <corners android:radius="350dp" />
 
     <!-- Optional padding -->
     <padding

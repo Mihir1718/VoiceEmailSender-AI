@@ -9,6 +9,7 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +48,8 @@ public class VoiceActivity extends AppCompatActivity {
 
     private TextToSpeech tts;
     private TextView txtTo, txtSubject, txtMessage;
-    private Button btnSpeak;
+    private ImageButton btnSpeak;
+
 
     private String email = "", subject = "", message = "";
     private String greeting = "", closing = "", attachmentPath = "";
@@ -75,13 +77,14 @@ public class VoiceActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
+            Intent intent = null;
             if (id == R.id.nav_home) {
                 drawerLayout.closeDrawer(GravityCompat.START);
-            } else if (id == R.id.nav_team) {
-                Intent intent = new Intent(this, AboutAppActivity.class);
+            } else if (id == R.id.nav_inbox) {
+                startActivity(new Intent(VoiceActivity.this, InboxActivity.class));
                 startActivity(intent);
             } else if (id == R.id.nav_app) {
-                Intent intent = new Intent(this, AboutAppActivity.class);
+                intent = new Intent(this, AboutAppActivity.class);
                 startActivity(intent);
             }
 
@@ -92,7 +95,7 @@ public class VoiceActivity extends AppCompatActivity {
         txtTo = findViewById(R.id.txtTo);
         txtSubject = findViewById(R.id.txtSubject);
         txtMessage = findViewById(R.id.txtMessage);
-        btnSpeak = findViewById(R.id.btnSpeak);
+        btnSpeak = findViewById(R.id.voiceButton);
 
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS)
