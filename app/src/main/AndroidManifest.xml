@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,8 +19,9 @@
         android:theme="@style/Theme.VoicEmailSender"
         tools:targetApi="31">
 
-        <!-- Launcher Splash -->
-        <activity android:name=".SplashActivity"
+        <!-- Launcher Splash Activity -->
+        <activity
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,13 +29,16 @@
             </intent-filter>
         </activity>
 
+        <!-- Other Activities -->
         <activity android:name=".GoogleLoginActivity" />
-        <activity android:name=".MainActivity" android:launchMode="singleTop" android:exported="true" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:exported="true" />
         <activity android:name=".VoiceActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".AboutAppActivity" />
         <activity android:name=".InboxActivity" />
-
 
     </application>
 </manifest>

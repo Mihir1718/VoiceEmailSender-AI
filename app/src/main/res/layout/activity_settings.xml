@@ -17,9 +17,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#222222"
+            android:background="@drawable/semi_transparent"
             android:title="Settings"
-            app:titleTextColor="@color/white" />
+            android:titleTextColor="@android:color/white" />
 
         <!-- Page Content -->
         <ScrollView
@@ -34,122 +34,217 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="24dp"
+
+                <!-- Profile Section -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="184dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/profileImage"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_width="113dp"
+                        android:layout_height="113dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/rounded_image"
+                        android:contentDescription="Profile Picture"
+                        android:scaleType="centerCrop" />
+
+
+                    <LinearLayout
+                        android:layout_width="265dp"
+                        android:layout_height="86dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/nameText"
+                            android:layout_width="265dp"
+                            android:layout_height="38dp"
+                            android:text="     Name "
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/emailText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:padding="10dp"
+                            android:text=" Edit personal details"
+                            android:textColor="@android:color/black"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Settings Item: Dark Mode -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:background="?android:attr/selectableItemBackground">
+
+
 
                     <TextView
-                        android:id="@+id/nameText"
-                        android:text="Name"
-                        android:textSize="18sp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_height="25dp" android:layout_width="75dp"/>
-
-                    <TextView
-                        android:id="@+id/emailText"
-                        android:text="Email"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Dark Mode"
                         android:textSize="16sp"
-                        android:layout_marginBottom="24dp"
-                        android:layout_height="25dp" android:layout_width="75dp"/>
-
-
-                </LinearLayout>
-
-                <!-- Notifications -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/ic_notifiy"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="  Enable Notifications"
-                        tools:textColor="@color/black"
-                        android:textSize="16sp" />
-
-                    <Switch
-                        android:id="@+id/switchNotifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:ignore="TouchTargetSizeCheck" />
-                </LinearLayout>
-
-                <!-- Theme Switch -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Dark Theme"
-                        tools:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textColor="@android:color/black" />
 
                     <Switch
                         android:id="@+id/switchTheme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        android:minWidth="48dp"
+                        android:minHeight="48dp" />
                 </LinearLayout>
 
-                <!-- Buttons -->
-                <Button
+                <!-- Settings Item: Notifications -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_notify"
+                        android:layout_marginEnd="16dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Enable Notifications"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black" />
+
+                    <Switch
+                        android:id="@+id/switchNotifications"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp" />
+                </LinearLayout>
+
+                <!-- Button: Visit Website -->
+                <LinearLayout
                     android:id="@+id/btnVisitWebsite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/transparent_button"
-                    android:text="Visit Official Website"
-                    android:textColor="@color/Dark_Gray"
-                    android:gravity="left|center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    android:layout_marginTop="16dp" />
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_web" />
 
-                <Button
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Visit Official Website"
+                        android:textSize="16sp"
+                        android:textColor="@color/Dark_Gray" />
+                </LinearLayout>
+
+
+                <!-- Button: Contact Support -->
+                <!-- Button: Contact Support -->
+                <LinearLayout
                     android:id="@+id/btnContactSupport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/transparent_button"
-                    android:text="Contact Support"
-                    android:textColor="@color/Dark_Gray"
-                    android:gravity="left|center_horizontal"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                <Button
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_support"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contact Support"
+                        android:textSize="16sp"
+                        android:textColor="@color/Dark_Gray" />
+                </LinearLayout>
+
+                <!-- Button: Manage Permissions -->
+                <LinearLayout
                     android:id="@+id/btnManagePermissions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/transparent_button"
-                    android:text="Manage App Permissions"
-                    android:textColor="@color/Dark_Gray"
-                    android:gravity="left|center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    android:layout_marginTop="12dp" />
-                <Button
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_permission"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage App Permissions"
+                        android:textSize="16sp"
+                        android:textColor="@color/Dark_Gray" />
+                </LinearLayout>
+
+                <!-- Button: Logout -->
+                <LinearLayout
                     android:id="@+id/logoutBtn"
-                    android:text="Logout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_logout"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Logout"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/holo_red_dark" />
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
 
@@ -157,16 +252,16 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
-            android:layout_height="69dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/bottom_nav_background"
-            app:itemIconSize="24dp"
+            app:itemIconSize="30dp"
             app:itemTextColor="@color/nav_selector"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
     </RelativeLayout>
 
-    <!-- Drawer Menu -->
+    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"

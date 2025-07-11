@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private BottomNavigationView bottomNav;
     private Switch switchNotifications, switchTheme;
-    private Button btnVisitWebsite, btnContactSupport, btnManagePermissions, logoutBtn;
+    private LinearLayout btnVisitWebsite, btnContactSupport, btnManagePermissions, logoutBtn;
     private TextView nameText, emailText;
     private ImageView profileImage;
 
@@ -39,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Apply dark mode early
+        // ✅ Apply Dark Mode Early (Prevents Blinking)
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
         boolean darkMode = prefs.getBoolean("dark_mode", false);
         AppCompatDelegate.setDefaultNightMode(
@@ -67,14 +67,14 @@ public class SettingsActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
                 startActivity(new Intent(this, MainActivity.class));
-            }  else if (id == R.id.nav_app) {
+            } else if (id == R.id.nav_app) {
                 startActivity(new Intent(this, AboutAppActivity.class));
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
 
-        // -------- Bottom Navigation Setup --------
+        // -------- Bottom Navigation --------
         bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_settings);
 
@@ -105,42 +105,47 @@ public class SettingsActivity extends AppCompatActivity {
         emailText = findViewById(R.id.emailText);
         profileImage = findViewById(R.id.profileImage);
 
+        // -------- Dark Mode Toggle --------
         switchTheme.setChecked(darkMode);
-
         switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
             SharedPreferences.Editor editor = getSharedPreferences("settings", MODE_PRIVATE).edit();
             editor.putBoolean("dark_mode", isChecked);
             editor.apply();
+
             AppCompatDelegate.setDefaultNightMode(
                     isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
             );
-            recreate();
+            recreate(); // Redraw UI with new theme
         });
 
+        // -------- Notifications Switch --------
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Toast.makeText(this,
                     isChecked ? "Notifications Enabled" : "Notifications Disabled",
                     Toast.LENGTH_SHORT).show();
         });
 
+        // -------- Visit Website --------
         btnVisitWebsite.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://yourwebsite.com"));
             startActivity(intent);
         });
 
+        // -------- Contact Support --------
         btnContactSupport.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
             intent.setData(Uri.parse("mailto:vbes2025@gmail.com"));
             intent.putExtra(Intent.EXTRA_SUBJECT, "Support Request");
             intent.putExtra(Intent.EXTRA_TEXT, "Hello, I need help with...");
             try {
-                intent.setPackage("com.google.android.gm");
+                intent.setPackage("com.google.android.gm"); // Open in Gmail
                 startActivity(intent);
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(this, "Gmail app not found", Toast.LENGTH_SHORT).show();
             }
         });
 
+        // -------- Manage Permissions --------
         btnManagePermissions.setOnClickListener(v -> {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -148,14 +153,18 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // -------- Firebase + Google Sign-in --------
+        // -------- Firebase Auth + Google Profile --------
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
 
         if (user != null) {
             nameText.setText(user.getDisplayName());
             emailText.setText(user.getEmail());
-            Glide.with(this).load(user.getPhotoUrl()).into(profileImage);
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .placeholder(R.drawable.profile_placeholder)
+                    .circleCrop()
+                    .into(profileImage);
         }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -165,6 +174,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // -------- Logout --------
         logoutBtn.setOnClickListener(v -> {
             auth.signOut();
             googleSignInClient.signOut().addOnCompleteListener(task -> {

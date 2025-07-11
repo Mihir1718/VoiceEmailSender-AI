@@ -5,10 +5,45 @@
     android:padding="32dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <!-- App Logo -->
+    <ImageView
+        android:id="@+id/appLogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/welcome"
+        android:contentDescription="App Logo"
+        android:layout_marginBottom="24dp" />
 
+    <!-- Welcome Text -->
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/subText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in to continue"
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="32dp" />
     <Button
         android:id="@+id/googleSignInBtn"
-        android:text="Sign In with Google"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Sign In with Google"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:backgroundTint="#FFFFFF"
+        android:drawableStart="@drawable/ic_google"
+        android:drawableLeft="@drawable/ic_google"
+        android:drawablePadding="12dp"
+        android:padding="16dp" />
+
 </LinearLayout>
