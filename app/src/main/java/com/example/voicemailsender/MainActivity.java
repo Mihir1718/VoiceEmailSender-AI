@@ -16,13 +16,23 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,9 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.nav_home) {
                 drawerLayout.closeDrawer(GravityCompat.START);
-            } else if (id == R.id.nav_team) {
-                Intent intent = new Intent(this, AboutTeamActivity.class);
-                startActivity(intent);
             } else if (id == R.id.nav_app) {
                 Intent intent = new Intent(this, AboutAppActivity.class);
                 startActivity(intent);
@@ -167,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             if (result != null && !result.isEmpty()) {
                 switch (step) {
                     case 0:
-                        email = result.get(0).toLowerCase().replaceAll("\\s+", "").replace("at", "@").replace("dot", ".");
+                        email = result.get(0).toLowerCase().replaceAll("\\s+", "").replace("attherate", "@").replace("dot", ".");
                         Toast.makeText(this, "Email: " + email, Toast.LENGTH_SHORT).show();
                         step++;
                         promptAndSpeak();
@@ -193,24 +200,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendEmail() {
-        if (email != null && message != null) {
-            Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            emailIntent.setData(Uri.parse("mailto:"));
-            emailIntent.setType("text/plain");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-            emailIntent.putExtra(Intent.EXTRA_TEXT, message);
-            emailIntent.setPackage("com.google.android.gm");
+        if (email != null && subject != null && message != null) {
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-            try {
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-            } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            if (account == null) {
+                Toast.makeText(this, "User not signed in with Google", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // ✅ Show a message before sending
+            Toast.makeText(this, "Sending email via Gmail API...", Toast.LENGTH_SHORT).show();
+
+            // ✅ Send using GmailSender
+            GmailSender.sendEmail(MainActivity.this, account, email, subject, message);
         } else {
-            Toast.makeText(this, "Please enter both email ID and message.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please complete voice input first.", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
 
     @Override
     protected void onDestroy() {

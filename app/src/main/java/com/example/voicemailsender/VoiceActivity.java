@@ -19,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -76,7 +78,7 @@ public class VoiceActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 drawerLayout.closeDrawer(GravityCompat.START);
             } else if (id == R.id.nav_team) {
-                Intent intent = new Intent(this, AboutTeamActivity.class);
+                Intent intent = new Intent(this, AboutAppActivity.class);
                 startActivity(intent);
             } else if (id == R.id.nav_app) {
                 Intent intent = new Intent(this, AboutAppActivity.class);
@@ -311,29 +313,21 @@ public class VoiceActivity extends AppCompatActivity {
     }
 
     private void sendEmail() {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("*/*");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+        if (email != null && subject != null && message != null) {
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if (isAttachmentRequired && !attachmentPath.isEmpty()) {
-            File file = new File(attachmentPath);
-            if (file.exists()) {
-                Uri fileUri = Uri.fromFile(file);
-                emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            } else {
-                Toast.makeText(this, "Attachment file not found at provided path.", Toast.LENGTH_SHORT).show();
+            if (account == null) {
+                Toast.makeText(this, "User not signed in with Google", Toast.LENGTH_SHORT).show();
+                return;
             }
-        }
 
-        emailIntent.setPackage("com.google.android.gm");
+            // ✅ Show a message before sending
+            Toast.makeText(this, "Sending email via Gmail API...", Toast.LENGTH_SHORT).show();
 
-        try {
-            startActivity(emailIntent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "Gmail app not installed", Toast.LENGTH_SHORT).show();
+            // ✅ Send using GmailSender
+            GmailSender.sendEmail(VoiceActivity.this, account, email, subject, message);
+        } else {
+            Toast.makeText(this, "Please complete voice input first.", Toast.LENGTH_SHORT).show();
         }
     }
 

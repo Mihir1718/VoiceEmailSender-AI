@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "399502980503",
+    "project_id": "voicemailsender-88e01",
+    "storage_bucket": "voicemailsender-88e01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399502980503:android:54a9795a46d1e946a900d2",
+        "android_client_info": {
+          "package_name": "com.example.voicemailsender"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399502980503-b0hhl9e7jf1445s038di04bhce7cd1u5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.voicemailsender",
+            "certificate_hash": "624fe760377e55d9e0fdde28f5b404ca3c95566c"
+          }
+        },
+        {
+          "client_id": "399502980503-2e0mfpe4kgf13danb7i75cd78d2c2ia9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT1Eypztpa_zLRYwixCwXKeiL0fHCNSfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399502980503-2e0mfpe4kgf13danb7i75cd78d2c2ia9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
