@@ -1,5 +1,6 @@
 package com.example.voicemailsender;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
+import com.google.api.services.gmail.GmailScopes;
 import com.google.firebase.auth.*;
 import com.google.android.gms.common.api.Scope;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,6 +52,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .requestIdToken("399502980503-2e0mfpe4kgf13danb7i75cd78d2c2ia9.apps.googleusercontent.com")
                 .requestScopes(new Scope("https://www.googleapis.com/auth/gmail.send"))
+                .requestScopes(new Scope(GmailScopes.GMAIL_MODIFY))
                 .build();
 
 
@@ -106,4 +109,5 @@ public class GoogleLoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }

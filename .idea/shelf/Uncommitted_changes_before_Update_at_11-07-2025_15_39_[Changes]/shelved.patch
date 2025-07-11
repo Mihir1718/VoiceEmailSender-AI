@@ -1,0 +1,872 @@
+Index: app/src/main/res/layout/activity_voice.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.drawerlayout.widget.DrawerLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/drawerLayout\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".VoiceActivity\">\r\n\r\n    <!-- Main content area -->\r\n    <RelativeLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\">\r\n\r\n        <!-- Toolbar -->\r\n        <androidx.appcompat.widget.Toolbar\r\n            android:id=\"@+id/toolbar\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"?attr/actionBarSize\"\r\n            android:background=\"@color/black\"\r\n            android:title=\"Voice Email Sender\"\r\n            android:titleTextColor=\"@android:color/white\"\r\n            app:titleTextColor=\"@android:color/white\" />\r\n\r\n        <!-- Content below toolbar -->\r\n        <ScrollView\r\n            android:id=\"@+id/scrollView\"\r\n            android:layout_below=\"@id/toolbar\"\r\n            android:layout_above=\"@id/bottom_navigation\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:padding=\"16dp\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <TextView\r\n                    android:id=\"@+id/txtTo\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"To:\"\r\n                    android:textSize=\"16sp\"\r\n                    android:padding=\"4dp\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/txtSubject\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"Subject:\"\r\n                    android:textSize=\"16sp\"\r\n                    android:padding=\"4dp\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/txtMessage\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"Message will appear here\"\r\n                    android:textSize=\"16sp\"\r\n                    android:padding=\"10dp\" />\r\n\r\n                <Button\r\n                    android:id=\"@+id/btnSpeak\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"\uD83C\uDF99\uFE0F Start Voice Input\" />\r\n            </LinearLayout>\r\n        </ScrollView>\r\n\r\n        <!-- Bottom Navigation -->\r\n        <com.google.android.material.bottomnavigation.BottomNavigationView\r\n            android:id=\"@+id/bottom_navigation\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"69dp\"\r\n            android:layout_alignParentBottom=\"true\"\r\n            android:background=\"@drawable/bottom_nav_background\"\r\n            app:itemIconSize=\"30dp\"\r\n            app:itemIconTint=\"@color/nav_selector\"\r\n            app:itemTextColor=\"@color/nav_selector\"\r\n            app:labelVisibilityMode=\"labeled\"\r\n            app:menu=\"@menu/bottom_nav_menu\" />\r\n    </RelativeLayout>\r\n\r\n    <!-- Navigation Drawer -->\r\n    <com.google.android.material.navigation.NavigationView\r\n        android:id=\"@+id/navigationView\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"match_parent\"\r\n        android:layout_gravity=\"start\"\r\n        app:menu=\"@menu/drawer_menu\"\r\n        app:headerLayout=\"@layout/drawer_header\" />\r\n</androidx.drawerlayout.widget.DrawerLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_voice.xml b/app/src/main/res/layout/activity_voice.xml
+--- a/app/src/main/res/layout/activity_voice.xml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/res/layout/activity_voice.xml	(date 1752225975357)
+@@ -7,34 +7,71 @@
+     android:layout_height="match_parent"
+     tools:context=".VoiceActivity">
+ 
+-    <!-- Main content area -->
++    <!-- Main Content Layout -->
+     <RelativeLayout
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent">
++        android:layout_height="match_parent"
++        android:background="#FFF8DC">
+ 
+         <!-- Toolbar -->
+         <androidx.appcompat.widget.Toolbar
+             android:id="@+id/toolbar"
+             android:layout_width="match_parent"
+             android:layout_height="?attr/actionBarSize"
+-            android:background="@color/black"
+-            android:title="Voice Email Sender"
++            android:background="#000000"
++            android:title="🎙️ Voice Email Sender"
+             android:titleTextColor="@android:color/white"
+             app:titleTextColor="@android:color/white" />
+ 
+-        <!-- Content below toolbar -->
++        <!-- Logo -->
++        <ImageView
++            android:id="@+id/logo"
++            android:layout_width="100dp"
++            android:layout_height="100dp"
++            android:layout_below="@id/toolbar"
++            android:layout_marginTop="40dp"
++            android:layout_centerHorizontal="true"
++            android:src="@drawable/ic_mic" />
++
++        <!-- App Name -->
++        <TextView
++            android:id="@+id/app_name"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/logo"
++            android:layout_centerHorizontal="true"
++            android:layout_marginTop="16dp"
++            android:text="V-Mail AI"
++            android:textSize="32sp"
++            android:textColor="#1ACCC1"
++            android:textStyle="bold" />
++
++        <!-- Tagline -->
++        <TextView
++            android:id="@+id/tagline"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/app_name"
++            android:layout_centerHorizontal="true"
++            android:layout_marginTop="8dp"
++            android:text="Speak. Send. Simplify."
++            android:textSize="14sp"
++            android:textColor="#666666" />
++
++        <!-- Message Area -->
+         <ScrollView
+             android:id="@+id/scrollView"
+-            android:layout_below="@id/toolbar"
+-            android:layout_above="@id/bottom_navigation"
+             android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:padding="16dp">
++            android:layout_height="wrap_content"
++            android:layout_below="@id/tagline"
++            android:layout_above="@+id/voiceButton"
++            android:layout_margin="16dp">
+ 
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+-                android:orientation="vertical">
++                android:orientation="vertical"
++                android:padding="8dp">
+ 
+                 <TextView
+                     android:id="@+id/txtTo"
+@@ -42,7 +79,8 @@
+                     android:layout_height="wrap_content"
+                     android:text="To:"
+                     android:textSize="16sp"
+-                    android:padding="4dp" />
++                    android:textStyle="bold"
++                    android:textColor="#000" />
+ 
+                 <TextView
+                     android:id="@+id/txtSubject"
+@@ -50,24 +88,37 @@
+                     android:layout_height="wrap_content"
+                     android:text="Subject:"
+                     android:textSize="16sp"
+-                    android:padding="4dp" />
++                    android:textStyle="bold"
++                    android:layout_marginTop="8dp"
++                    android:textColor="#000" />
+ 
+                 <TextView
+                     android:id="@+id/txtMessage"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:text="Message will appear here"
++                    android:layout_marginTop="8dp"
++                    android:padding="8dp"
++                    android:background="@drawable/message_box"
+                     android:textSize="16sp"
+-                    android:padding="10dp" />
+-
+-                <Button
+-                    android:id="@+id/btnSpeak"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:text="🎙️ Start Voice Input" />
++                    android:textColor="#000" />
+             </LinearLayout>
+         </ScrollView>
+ 
++        <!-- Circular Mic Button -->
++        <ImageButton
++            android:id="@+id/voiceButton"
++            android:layout_width="120dp"
++            android:layout_height="120dp"
++            android:layout_centerHorizontal="true"
++            android:layout_alignParentBottom="true"
++            android:layout_marginBottom="100dp"
++            android:background="@drawable/bg_circle_button"
++            android:src="@drawable/ic_btn_mic"
++            android:contentDescription="Start Voice"
++            android:scaleType="centerInside"
++            android:padding="20dp" />
++
+         <!-- Bottom Navigation -->
+         <com.google.android.material.bottomnavigation.BottomNavigationView
+             android:id="@+id/bottom_navigation"
+@@ -90,4 +141,5 @@
+         android:layout_gravity="start"
+         app:menu="@menu/drawer_menu"
+         app:headerLayout="@layout/drawer_header" />
++
+ </androidx.drawerlayout.widget.DrawerLayout>
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n    <uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>\r\n    <uses-permission android:name=\"android.permission.RECORD_AUDIO\" />\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name1\"\r\n        android:hardwareAccelerated=\"true\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.VoicEmailSender\"\r\n        tools:targetApi=\"31\">\r\n\r\n        <!-- Launcher Splash -->\r\n        <activity android:name=\".SplashActivity\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n\r\n        <activity android:name=\".GoogleLoginActivity\" />\r\n        <activity android:name=\".MainActivity\" android:launchMode=\"singleTop\" android:exported=\"true\" />\r\n        <activity android:name=\".VoiceActivity\" />\r\n        <activity android:name=\".SettingsActivity\" />\r\n        <activity android:name=\".AboutAppActivity\" />\r\n\r\n\r\n    </application>\r\n</manifest>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/AndroidManifest.xml	(date 1752220960776)
+@@ -31,6 +31,7 @@
+         <activity android:name=".VoiceActivity" />
+         <activity android:name=".SettingsActivity" />
+         <activity android:name=".AboutAppActivity" />
++        <activity android:name=".InboxActivity" />
+ 
+ 
+     </application>
+Index: app/src/main/res/layout/activity_inbox.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_inbox.xml b/app/src/main/res/layout/activity_inbox.xml
+new file mode 100644
+--- /dev/null	(date 1752214145193)
++++ b/app/src/main/res/layout/activity_inbox.xml	(date 1752214145193)
+@@ -0,0 +1,56 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:id="@+id/drawerLayout"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <!-- Main content -->
++    <RelativeLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
++
++        <!-- Toolbar -->
++        <androidx.appcompat.widget.Toolbar
++            android:id="@+id/toolbar"
++            android:layout_width="match_parent"
++            android:layout_height="?attr/actionBarSize"
++            android:background="@color/black"
++            android:title="Inbox"
++            android:titleTextColor="@android:color/white"
++            app:titleTextColor="@android:color/white" />
++
++        <!-- List of Emails -->
++        <ListView
++            android:id="@+id/inboxListView"
++            android:layout_below="@id/toolbar"
++            android:layout_above="@id/bottom_navigation"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:divider="#CCCCCC"
++            android:dividerHeight="1dp"
++            android:padding="12dp" />
++
++        <!-- Bottom Navigation -->
++        <com.google.android.material.bottomnavigation.BottomNavigationView
++            android:id="@+id/bottom_navigation"
++            android:layout_width="match_parent"
++            android:layout_height="69dp"
++            android:layout_alignParentBottom="true"
++            android:background="@drawable/bottom_nav_background"
++            app:itemIconSize="30dp"
++            app:itemIconTint="@color/nav_selector"
++            app:itemTextColor="@color/nav_selector"
++            app:labelVisibilityMode="labeled"
++            app:menu="@menu/bottom_nav_menu" />
++    </RelativeLayout>
++
++    <!-- Navigation Drawer -->
++    <com.google.android.material.navigation.NavigationView
++        android:id="@+id/navigationView"
++        android:layout_width="wrap_content"
++        android:layout_height="match_parent"
++        android:layout_gravity="start"
++        app:menu="@menu/drawer_menu"
++        app:headerLayout="@layout/drawer_header" />
++</androidx.drawerlayout.widget.DrawerLayout>
+Index: app/src/main/res/drawable/transparent_button.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<selector xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n    <item android:state_pressed=\"true\">\r\n        <shape>\r\n            <solid android:color=\"#22FFFFFF\" /> <!-- light touch color -->\r\n            <corners android:radius=\"8dp\"/>\r\n        </shape>\r\n    </item>\r\n\r\n    <item>\r\n        <shape>\r\n            <solid android:color=\"@android:color/transparent\" />\r\n            <corners android:radius=\"8dp\"/>\r\n        </shape>\r\n    </item>\r\n</selector>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/transparent_button.xml b/app/src/main/res/drawable/transparent_button.xml
+--- a/app/src/main/res/drawable/transparent_button.xml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/res/drawable/transparent_button.xml	(date 1752225076009)
+@@ -2,7 +2,7 @@
+ <selector xmlns:android="http://schemas.android.com/apk/res/android">
+     <item android:state_pressed="true">
+         <shape>
+-            <solid android:color="#22FFFFFF" /> <!-- light touch color -->
++            <solid android:color="#800000" /> <!-- light touch color -->
+             <corners android:radius="8dp"/>
+         </shape>
+     </item>
+Index: app/src/main/java/com/example/voicemailsender/EmailDetailActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/voicemailsender/EmailDetailActivity.java b/app/src/main/java/com/example/voicemailsender/EmailDetailActivity.java
+new file mode 100644
+--- /dev/null	(date 1752218240541)
++++ b/app/src/main/java/com/example/voicemailsender/EmailDetailActivity.java	(date 1752218240541)
+@@ -0,0 +1,89 @@
++package com.example.voicemailsender;
++
++import android.os.Bundle;
++import android.speech.tts.TextToSpeech;
++import android.util.Base64;
++import android.util.Log;
++import android.widget.TextView;
++
++import androidx.appcompat.app.AppCompatActivity;
++
++import com.google.android.gms.auth.api.signin.GoogleSignIn;
++import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
++import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
++import com.google.api.client.json.gson.GsonFactory;
++import com.google.api.services.gmail.Gmail;
++import com.google.api.services.gmail.model.Message;
++
++import java.util.Collections;
++import java.util.Locale;
++
++public class EmailDetailActivity extends AppCompatActivity {
++
++    TextView emailContentView;
++    TextToSpeech tts;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_email_detail);
++
++        emailContentView = findViewById(R.id.emailContentText);
++
++        String messageId = getIntent().getStringExtra("MESSAGE_ID");
++        if (messageId == null) {
++            finish();
++            return;
++        }
++
++        tts = new TextToSpeech(this, status -> {
++            if (status == TextToSpeech.SUCCESS) {
++                tts.setLanguage(Locale.US);
++                fetchAndSpeakEmail(messageId);
++            }
++        });
++    }
++
++    private void fetchAndSpeakEmail(String messageId) {
++        new Thread(() -> {
++            try {
++                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
++                        this, Collections.singleton("https://www.googleapis.com/auth/gmail.readonly"));
++                credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(this).getAccount());
++
++                Gmail service = new Gmail.Builder(
++                        GoogleNetHttpTransport.newTrustedTransport(),
++                        GsonFactory.getDefaultInstance(),
++                        credential
++                ).setApplicationName("VoiceEmailSender").build();
++
++                Message message = service.users().messages().get("me", messageId).setFormat("full").execute();
++                String bodyData = message.getPayload().getBody().getData();
++
++                if (bodyData == null && !message.getPayload().getParts().isEmpty()) {
++                    bodyData = message.getPayload().getParts().get(0).getBody().getData();
++                }
++
++                if (bodyData != null) {
++                    String decoded = new String(Base64.decode(bodyData, Base64.URL_SAFE));
++                    runOnUiThread(() -> {
++                        emailContentView.setText(decoded);
++                        tts.speak(decoded, TextToSpeech.QUEUE_FLUSH, null, null);
++                    });
++                }
++
++            } catch (Exception e) {
++                Log.e("EmailDetail", "Failed to load email", e);
++            }
++        }).start();
++    }
++
++    @Override
++    protected void onDestroy() {
++        if (tts != null) {
++            tts.stop();
++            tts.shutdown();
++        }
++        super.onDestroy();
++    }
++}
+Index: app/src/main/res/layout/activity_email_detail.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_email_detail.xml b/app/src/main/res/layout/activity_email_detail.xml
+new file mode 100644
+--- /dev/null	(date 1752214476962)
++++ b/app/src/main/res/layout/activity_email_detail.xml	(date 1752214476962)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
++    android:padding="16dp"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <TextView
++        android:id="@+id/emailContentText"
++        android:textSize="16sp"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content" />
++</ScrollView>
+Index: app/src/main/java/com/example/voicemailsender/EmailAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/voicemailsender/EmailAdapter.java b/app/src/main/java/com/example/voicemailsender/EmailAdapter.java
+new file mode 100644
+--- /dev/null	(date 1752222160804)
++++ b/app/src/main/java/com/example/voicemailsender/EmailAdapter.java	(date 1752222160804)
+@@ -0,0 +1,34 @@
++package com.example.voicemailsender;
++
++import android.annotation.SuppressLint;
++import android.content.Context;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ArrayAdapter;
++import android.widget.TextView;
++
++import java.util.List;
++
++public class EmailAdapter extends ArrayAdapter<String> {
++
++    public EmailAdapter(Context context, List<String> subjects) {
++        super(context, 0, subjects);
++    }
++
++    @SuppressLint("ViewHolder")
++    @Override
++     public View getView(int position, View convertView, ViewGroup parent) {
++        String subject = getItem(position);
++
++        View view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
++        TextView tv1 = view.findViewById(android.R.id.text1);
++        TextView tv2 = view.findViewById(android.R.id.text2);
++
++        tv1.setText(subject);
++        tv2.setText("Tap to hear full email");  // optional subtitle
++
++        return view;
++    }
++
++}
+Index: app/src/main/java/com/example/voicemailsender/InboxActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/voicemailsender/InboxActivity.java b/app/src/main/java/com/example/voicemailsender/InboxActivity.java
+new file mode 100644
+--- /dev/null	(date 1752221734262)
++++ b/app/src/main/java/com/example/voicemailsender/InboxActivity.java	(date 1752221734262)
+@@ -0,0 +1,166 @@
++package com.example.voicemailsender;
++
++import android.app.ProgressDialog;
++import android.content.Intent;
++import android.os.Bundle;
++import android.util.Log;
++import android.widget.ListView;
++import android.widget.Toast;
++
++import androidx.appcompat.app.ActionBarDrawerToggle;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.appcompat.widget.Toolbar;
++import androidx.core.view.GravityCompat;
++import androidx.drawerlayout.widget.DrawerLayout;
++
++import com.google.android.gms.auth.api.signin.GoogleSignIn;
++import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
++import com.google.android.material.bottomnavigation.BottomNavigationView;
++import com.google.android.material.navigation.NavigationView;
++import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
++import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
++import com.google.api.client.json.gson.GsonFactory;
++import com.google.api.services.gmail.Gmail;
++import com.google.api.services.gmail.model.ListMessagesResponse;
++import com.google.api.services.gmail.model.Message;
++import com.google.api.services.gmail.model.MessagePartHeader;
++
++import java.io.IOException;
++import java.security.GeneralSecurityException;
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.List;
++
++public class InboxActivity extends AppCompatActivity {
++
++    private ListView listView;
++    private ArrayList<String> emailSubjects = new ArrayList<>();
++    private ArrayList<String> emailIds = new ArrayList<>();
++    private Gmail gmailService;
++    private ProgressDialog progressDialog;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_inbox);
++
++        Toolbar toolbar = findViewById(R.id.toolbar);
++        setSupportActionBar(toolbar);
++
++        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
++        NavigationView navigationView = findViewById(R.id.navigationView);
++
++        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
++                this, drawerLayout, toolbar,
++                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
++        drawerLayout.addDrawerListener(toggle);
++        toggle.syncState();
++
++        navigationView.setNavigationItemSelectedListener(item -> {
++            int id = item.getItemId();
++            if (id == R.id.nav_home) {
++                startActivity(new Intent(this, MainActivity.class));
++            } else if (id == R.id.nav_voice) {
++                startActivity(new Intent(this, VoiceActivity.class));
++            } else if (id == R.id.nav_settings) {
++                startActivity(new Intent(this, SettingsActivity.class));
++            }
++            drawerLayout.closeDrawer(GravityCompat.START);
++            return true;
++        });
++
++        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
++        bottomNav.setSelectedItemId(R.id.nav_inbox);
++        bottomNav.setOnItemSelectedListener(item -> {
++            int itemId = item.getItemId();
++            if (itemId == R.id.nav_home) {
++                startActivity(new Intent(getApplicationContext(), MainActivity.class));
++                return true;
++            } else if (itemId == R.id.nav_voice) {
++                startActivity(new Intent(getApplicationContext(), VoiceActivity.class));
++                return true;
++            } else if (itemId == R.id.nav_settings) {
++                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
++                return true;
++            }
++            return false;
++        });
++
++        listView = findViewById(R.id.inboxListView);
++
++        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
++        if (account == null) {
++            Toast.makeText(this, "User not signed in", Toast.LENGTH_SHORT).show();
++            finish();
++            return;
++        }
++
++        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
++                this, Collections.singleton("https://www.googleapis.com/auth/gmail.readonly"));
++        credential.setSelectedAccount(account.getAccount());
++
++        try {
++            gmailService = new Gmail.Builder(
++                    GoogleNetHttpTransport.newTrustedTransport(),
++                    GsonFactory.getDefaultInstance(),
++                    credential
++            ).setApplicationName("VoiceEmailSender").build();
++        } catch (GeneralSecurityException | IOException e) {
++            Toast.makeText(this, "Failed to initialize Gmail API", Toast.LENGTH_SHORT).show();
++            Log.e("InboxActivity", "Initialization error", e);
++            return;
++        }
++
++        loadEmails();
++
++        listView.setOnItemClickListener((parent, view, position, id) -> {
++            String messageId = emailIds.get(position);
++            Intent intent = new Intent(InboxActivity.this, EmailDetailActivity.class);
++            intent.putExtra("MESSAGE_ID", messageId);
++            startActivity(intent);
++        });
++    }
++
++    private void loadEmails() {
++        progressDialog = ProgressDialog.show(this, "Loading", "Fetching emails...", true);
++        new Thread(() -> {
++            try {
++                ListMessagesResponse response = gmailService.users().messages()
++                        .list("me")
++                        .setMaxResults(30L)
++                        .setQ("in:inbox")
++                        .execute();
++
++                List<Message> messages = response.getMessages();
++                if (messages == null) return;
++
++                for (Message msg : messages) {
++                    Message fullMessage = gmailService.users().messages()
++                            .get("me", msg.getId()).setFormat("full").execute();
++                    List<MessagePartHeader> headers = fullMessage.getPayload().getHeaders();
++                    String subject = "(No Subject)";
++                    for (MessagePartHeader header : headers) {
++                        if ("Subject".equalsIgnoreCase(header.getName())) {
++                            subject = header.getValue();
++                            break;
++                        }
++                    }
++                    emailSubjects.add(subject);
++                    emailIds.add(fullMessage.getId());
++                }
++
++                runOnUiThread(() -> {
++                    listView.setAdapter(new EmailAdapter(this, emailSubjects));
++                    progressDialog.dismiss();
++                });
++
++            } catch (IOException e) {
++                runOnUiThread(() -> {
++                    progressDialog.dismiss();
++                    Toast.makeText(InboxActivity.this, "❌ Failed to load inbox", Toast.LENGTH_LONG).show();
++                });
++                Log.e("InboxActivity", "❌ Error loading emails", e);
++            }
++        }).start();
++    }
++}
+Index: app/src/main/res/drawable/bg_circle_button.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/bg_circle_button.xml b/app/src/main/res/drawable/bg_circle_button.xml
+new file mode 100644
+--- /dev/null	(date 1752226368958)
++++ b/app/src/main/res/drawable/bg_circle_button.xml	(date 1752226368958)
+@@ -0,0 +1,8 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shape="oval">
++    <solid android:color="#F5DEB3" />
++    <size android:width="120dp" android:height="120dp" />
++    <corners android:radius="60dp" />
++    <padding android:left="4dp" android:top="4dp" android:right="4dp" android:bottom="4dp"/>
++    <stroke android:width="2dp" android:color="#007A74" />
++</shape>
+Index: app/src/main/res/drawable/rounded_background.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<shape xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:shape=\"rectangle\">\r\n\r\n    <!-- Background color -->\r\n<!--    <solid android:color=\"#015c94\" />-->\r\n    <gradient xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n        android:type=\"linear\"\r\n        android:angle=\"45\"\r\n        android:startColor=\"#006c7a\"\r\n        android:endColor=\"#10296e\"\r\n        android:gradientRadius=\"500\"\r\n        android:centerColor=\"#33007a\" />\r\n\r\n    <!-- Corner radius -->\r\n    <corners android:radius=\"25dp\" />\r\n\r\n    <!-- Optional padding -->\r\n    <padding\r\n        android:left=\"8dp\"\r\n        android:top=\"8dp\"\r\n        android:right=\"8dp\"\r\n        android:bottom=\"8dp\" />\r\n</shape>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/rounded_background.xml b/app/src/main/res/drawable/rounded_background.xml
+--- a/app/src/main/res/drawable/rounded_background.xml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/res/drawable/rounded_background.xml	(date 1752223928233)
+@@ -5,15 +5,16 @@
+     <!-- Background color -->
+ <!--    <solid android:color="#015c94" />-->
+     <gradient xmlns:android="http://schemas.android.com/apk/res/android"
+-        android:type="linear"
+-        android:angle="45"
++        android:type="sweep"
++        android:centerX="0.5"
++        android:centerY="0.5"
+         android:startColor="#006c7a"
+         android:endColor="#10296e"
+         android:gradientRadius="500"
+         android:centerColor="#33007a" />
+ 
+     <!-- Corner radius -->
+-    <corners android:radius="25dp" />
++    <corners android:radius="350dp" />
+ 
+     <!-- Optional padding -->
+     <padding
+Index: app/src/main/java/com/example/voicemailsender/AboutAppActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.voicemailsender;\r\n\r\nimport android.content.Intent;\r\nimport android.content.SharedPreferences;\r\nimport android.os.Bundle;\r\nimport android.view.MenuItem;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.ActionBarDrawerToggle;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.app.AppCompatDelegate;\r\nimport androidx.appcompat.widget.Toolbar;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\nimport androidx.core.view.GravityCompat;\r\n\r\nimport com.google.android.material.navigation.NavigationView;\r\n\r\npublic class AboutAppActivity extends AppCompatActivity {\r\n\r\n    private DrawerLayout drawerLayout;\r\n    private Toolbar toolbar;\r\n    private NavigationView navigationView;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_about_app);\r\n        SharedPreferences prefs = getSharedPreferences(\"settings\", MODE_PRIVATE);\r\n        boolean darkMode = prefs.getBoolean(\"dark_mode\", false);\r\n\r\n        AppCompatDelegate.setDefaultNightMode(\r\n                darkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO\r\n        );\r\n\r\n\r\n        drawerLayout = findViewById(R.id.drawerLayout);\r\n        toolbar = findViewById(R.id.toolbar);\r\n        navigationView = findViewById(R.id.navigationView);\r\n\r\n        setSupportActionBar(toolbar);\r\n        getSupportActionBar().setTitle(getString(R.string.app_name5));\r\n\r\n\r\n        // Set up the hamburger icon\r\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(\r\n                this, drawerLayout, toolbar,\r\n                R.string.navigation_drawer_open,\r\n                R.string.navigation_drawer_close\r\n        );\r\n        drawerLayout.addDrawerListener(toggle);\r\n        toggle.syncState();\r\n\r\n        // Handle navigation item clicks\r\n        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {\r\n            class AboutTeamActivity {\r\n            }\r\n\r\n            @Override\r\n            public boolean onNavigationItemSelected(@NonNull MenuItem item) {\r\n                int id = item.getItemId();\r\n                if (id == R.id.nav_home) {\r\n                    startActivity(new Intent(AboutAppActivity.this, MainActivity.class));\r\n                } else if (id == R.id.nav_team) {\r\n                    startActivity(new Intent(AboutAppActivity.this, AboutTeamActivity.class));\r\n                } else if (id == R.id.nav_app) {\r\n                    // Already on About App\r\n                }\r\n\r\n                drawerLayout.closeDrawer(GravityCompat.START);\r\n                return true;\r\n            }\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/voicemailsender/AboutAppActivity.java b/app/src/main/java/com/example/voicemailsender/AboutAppActivity.java
+--- a/app/src/main/java/com/example/voicemailsender/AboutAppActivity.java	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/java/com/example/voicemailsender/AboutAppActivity.java	(date 1752221254115)
+@@ -60,8 +60,8 @@
+                 int id = item.getItemId();
+                 if (id == R.id.nav_home) {
+                     startActivity(new Intent(AboutAppActivity.this, MainActivity.class));
+-                } else if (id == R.id.nav_team) {
+-                    startActivity(new Intent(AboutAppActivity.this, AboutTeamActivity.class));
++                } else if (id == R.id.nav_inbox) {
++                    startActivity(new Intent(AboutAppActivity.this, InboxActivity.class));
+                 } else if (id == R.id.nav_app) {
+                     // Already on About App
+                 }
+Index: app/src/main/res/drawable/rounded_button.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/rounded_button.xml b/app/src/main/res/drawable/rounded_button.xml
+new file mode 100644
+--- /dev/null	(date 1752223329267)
++++ b/app/src/main/res/drawable/rounded_button.xml	(date 1752223329267)
+@@ -0,0 +1,5 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shape="oval">
++    <solid android:color="#3B82F6"/>
++    <size android:width="80dp" android:height="80dp"/>
++</shape>
+\ No newline at end of file
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\r\nagp = \"8.5.1\"\r\nkotlin = \"1.9.0\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.2.1\"\r\nespressoCore = \"3.6.1\"\r\n\r\nappcompat = \"1.7.0\"\r\nmaterial = \"1.12.0\"\r\nactivity = \"1.9.2\"\r\nconstraintlayout = \"2.1.4\"\r\n\r\nokhttp = \"4.10.0\"\r\njson = \"20210307\"\r\ncorektx = \"1.12.0\"\r\n\r\n[libraries]\r\n# Existing\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\next-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nespresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nappcompat = { group = \"androidx.appcompat\", name = \"appcompat\", version.ref = \"appcompat\" }\r\nmaterial = { group = \"com.google.android.material\", name = \"material\", version.ref = \"material\" }\r\nactivity = { group = \"androidx.activity\", name = \"activity\", version.ref = \"activity\" }\r\nconstraintlayout = { group = \"androidx.constraintlayout\", name = \"constraintlayout\", version.ref = \"constraintlayout\" }\r\n\r\n# \uD83C\uDD95 New libraries for AI & voice\r\nokhttp = { group = \"com.squareup.okhttp3\", name = \"okhttp\", version.ref = \"okhttp\" }\r\njson = { group = \"org.json\", name = \"json\", version.ref = \"json\" }\r\ncorektx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"corektx\" }\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nkotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"kotlin\" }\r\ngoogle-services = { id = \"com.google.gms.google-services\", version = \"4.4.1\" }\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/gradle/libs.versions.toml	(date 1752220479057)
+@@ -23,6 +23,9 @@
+ material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+ activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
++google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "1.33.2" }
++google-api-client-gson = { group = "com.google.api-client", name = "google-api-client-gson", version = "1.33.2" }
++google-api-services-gmail = { group = "com.google.apis", name = "google-api-services-gmail", version = "v1-rev20230125-2.0.0" }
+ 
+ # 🆕 New libraries for AI & voice
+ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    alias(libs.plugins.android.application)\r\n    alias(libs.plugins.kotlin.android)\r\n    alias(libs.plugins.google.services) // ✅ Firebase plugin via version catalog\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.example.voicemailsender\"\r\n    compileSdk = 34\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.example.voicemailsender\"\r\n        minSdk = 24\r\n        targetSdk = 34\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n        packaging {\r\n            resources {\r\n                excludes += \"/META-INF/NOTICE.md\"\r\n                excludes += \"/META-INF/LICENSE.md\"\r\n                excludes += \"/META-INF/DEPENDENCIES\"\r\n                excludes += \"/META-INF/LICENSE\"\r\n                excludes += \"/META-INF/NOTICE\"\r\n            }\r\n    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_17\r\n        targetCompatibility = JavaVersion.VERSION_17\r\n    }\r\n}\r\n\r\n// ✅ JVM Target for Kotlin\r\ntasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {\r\n    kotlinOptions {\r\n        jvmTarget = \"17\"\r\n    }\r\n}\r\n\r\ndependencies {\r\n    // Core AndroidX\r\n    implementation(libs.corektx)\r\n    implementation(libs.appcompat)\r\n    implementation(libs.material)\r\n    implementation(libs.activity)\r\n    implementation(libs.constraintlayout)\r\n\r\n    // Voice/JSON/Network\r\n    implementation(libs.okhttp)\r\n    implementation(libs.json)\r\n\r\n    // Retrofit\r\n    implementation(\"com.squareup.retrofit2:retrofit:2.9.0\")\r\n    implementation(\"com.squareup.retrofit2:converter-gson:2.9.0\")\r\n    implementation(\"com.squareup.okhttp3:logging-interceptor:4.12.0\")\r\n\r\n    // JavaMail\r\n    implementation(\"com.sun.mail:android-mail:1.6.7\")\r\n    implementation(\"com.sun.mail:android-activation:1.6.7\")\r\n\r\n    // Firebase\r\n    implementation(\"com.google.firebase:firebase-auth:22.3.0\")\r\n    implementation(\"com.google.firebase:firebase-firestore:24.10.0\")\r\n    // javaMail\r\n    implementation(\"com.sun.mail:android-mail:1.6.7\")\r\n    implementation (\"com.sun.mail:android-activation:1.6.7\")\r\n// Gmial API\r\n    implementation (\"com.google.api-client:google-api-client-android:1.32.1\")\r\n    implementation (\"com.google.apis:google-api-services-gmail:v1-rev110-1.25.0\")\r\n    implementation (\"com.google.oauth-client:google-oauth-client-jetty:1.34.1\")\r\n    implementation(\"com.google.http-client:google-http-client-gson:1.42.3\")\r\n    implementation(\"com.google.http-client:google-http-client-android:1.42.3\")\r\n\r\n\r\n    // Lifecycle (optional but useful)\r\n    implementation(\"androidx.lifecycle:lifecycle-livedata-ktx:2.6.2\")\r\n    implementation(\"androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2\")\r\n    implementation(\"com.google.android.gms:play-services-auth:21.1.1\")\r\n    implementation(\"com.github.bumptech.glide:glide:4.16.0\")\r\n    annotationProcessor(\"com.github.bumptech.glide:compiler:4.16.0\")\r\n\r\n    // Testing\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(libs.ext.junit)\r\n    androidTestImplementation(libs.espresso.core)\r\n}}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/build.gradle.kts	(date 1752219879561)
+@@ -56,7 +56,14 @@
+     implementation(libs.material)
+     implementation(libs.activity)
+     implementation(libs.constraintlayout)
+-
++    implementation(libs.google.api.client.android)
++    implementation(libs.google.api.client.gson)
++    implementation(libs.google.api.services.gmail)
++// Core AndroidX and Material
++    implementation("androidx.core:core-ktx:1.13.1")
++    implementation("androidx.appcompat:appcompat:1.6.1")
++    implementation("com.google.android.material:material:1.11.0")
++    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+     // Voice/JSON/Network
+     implementation(libs.okhttp)
+     implementation(libs.json)
+@@ -65,6 +72,11 @@
+     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
++    // JSON parsing
++    implementation("org.json:json:20210307")
++
++    // Google Sign-In (for Gmail API Auth)
++    implementation("com.google.android.gms:play-services-auth:21.0.0")
+ 
+     // JavaMail
+     implementation("com.sun.mail:android-mail:1.6.7")
+@@ -82,7 +94,16 @@
+     implementation ("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+     implementation("com.google.http-client:google-http-client-gson:1.42.3")
+     implementation("com.google.http-client:google-http-client-android:1.42.3")
++    implementation("com.google.api-client:google-api-client-android:1.34.0")
++    implementation("com.google.api-client:google-api-client-gson:1.34.0")
++    implementation("com.google.http-client:google-http-client-gson:1.43.3")
++    implementation("com.google.apis:google-api-services-gmail:v1-rev110-1.25.0")
+ 
++    // Retrofit & OkHttp
++    implementation("com.squareup.retrofit2:retrofit:2.9.0")
++    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
++    implementation("com.squareup.okhttp3:okhttp:4.10.0")
++    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+ 
+     // Lifecycle (optional but useful)
+     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+Index: app/src/main/res/menu/bottom_nav_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n    <item\r\n        android:id=\"@+id/nav_home\"\r\n        android:icon=\"@drawable/ic_home\"\r\n        android:title=\"Home\" />\r\n\r\n    <item\r\n        android:id=\"@+id/nav_voice\"\r\n        android:icon=\"@drawable/ic_mic\"\r\n        android:title=\"Voice\" />\r\n\r\n    <item\r\n        android:id=\"@+id/nav_settings\"\r\n        android:icon=\"@drawable/ic_settings\"\r\n        android:title=\"Settings\" />\r\n</menu>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/bottom_nav_menu.xml b/app/src/main/res/menu/bottom_nav_menu.xml
+--- a/app/src/main/res/menu/bottom_nav_menu.xml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/res/menu/bottom_nav_menu.xml	(date 1752222329053)
+@@ -8,9 +8,9 @@
+         android:id="@+id/nav_voice"
+         android:icon="@drawable/ic_mic"
+         android:title="Voice" />
+-
+     <item
+         android:id="@+id/nav_settings"
+         android:icon="@drawable/ic_settings"
+         android:title="Settings" />
++
+ </menu>
+Index: app/src/main/res/menu/drawer_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n    <item\r\n        android:id=\"@+id/nav_home\"\r\n        android:icon=\"@drawable/ic_home\"\r\n        android:title=\"Home\"\r\n        android:visible=\"true\" />\r\n    <item\r\n        android:id=\"@+id/nav_team\"\r\n        android:icon=\"@drawable/ic_team\"\r\n        android:title=\"About Team\" />\r\n    <item\r\n        android:id=\"@+id/nav_app\"\r\n        android:icon=\"@drawable/ic_app\"\r\n        android:title=\"About App\" />\r\n    <item\r\n        android:id=\"@+id/nav_share\"\r\n        android:title=\"Share App\"\r\n        android:icon=\"@drawable/ic_share\" />\r\n</menu>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/drawer_menu.xml b/app/src/main/res/menu/drawer_menu.xml
+--- a/app/src/main/res/menu/drawer_menu.xml	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/res/menu/drawer_menu.xml	(date 1752221066665)
+@@ -6,9 +6,9 @@
+         android:title="Home"
+         android:visible="true" />
+     <item
+-        android:id="@+id/nav_team"
+-        android:icon="@drawable/ic_team"
+-        android:title="About Team" />
++        android:id="@+id/nav_inbox"
++        android:icon="@drawable/ic_inbox"
++        android:title="Inbox" />
+     <item
+         android:id="@+id/nav_app"
+         android:icon="@drawable/ic_app"
+Index: app/src/main/res/drawable/message_box.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/message_box.xml b/app/src/main/res/drawable/message_box.xml
+new file mode 100644
+--- /dev/null	(date 1752226138330)
++++ b/app/src/main/res/drawable/message_box.xml	(date 1752226138330)
+@@ -0,0 +1,5 @@
++<shape xmlns:android="http://schemas.android.com/apk/res/android">
++    <solid android:color="#EEEEEE" />
++    <corners android:radius="12dp" />
++    <stroke android:width="1dp" android:color="#CCCCCC" />
++</shape>
+Index: app/src/main/java/com/example/voicemailsender/VoiceActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.voicemailsender;\r\n\r\nimport android.content.ActivityNotFoundException;\r\nimport android.content.Intent;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.os.Handler;\r\nimport android.speech.RecognizerIntent;\r\nimport android.speech.tts.TextToSpeech;\r\nimport android.util.Log;\r\nimport android.widget.Button;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.ActionBarDrawerToggle;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.Toolbar;\r\nimport androidx.core.view.GravityCompat;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\n\r\nimport com.google.android.gms.auth.api.signin.GoogleSignIn;\r\nimport com.google.android.gms.auth.api.signin.GoogleSignInAccount;\r\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\r\nimport com.google.android.material.navigation.NavigationView;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONObject;\r\n\r\nimport java.io.File;\r\nimport java.io.IOException;\r\nimport java.util.ArrayList;\r\nimport java.util.Locale;\r\nimport java.util.Objects;\r\n\r\nimport okhttp3.*;\r\n\r\npublic class VoiceActivity extends AppCompatActivity {\r\n\r\n    private static final int REQ_EMAIL = 100;\r\n    private static final int REQ_SUBJECT = 101;\r\n    private static final int REQ_WORDS = 102;\r\n    private static final int REQ_GREETING = 103;\r\n    private static final int REQ_CLOSING = 104;\r\n    private static final int REQ_ATTACHMENT_CONFIRM = 105;\r\n    private static final int REQ_ATTACHMENT_PATH = 106;\r\n\r\n    private TextToSpeech tts;\r\n    private TextView txtTo, txtSubject, txtMessage;\r\n    private Button btnSpeak;\r\n\r\n    private String email = \"\", subject = \"\", message = \"\";\r\n    private String greeting = \"\", closing = \"\", attachmentPath = \"\";\r\n    private int wordCount = 50;\r\n    private boolean isAttachmentRequired = false;\r\n\r\n    private final String GEMINI_API_KEY = \"AIzaSyBAbHtk5n-mtcQfPOsclzS9hlNFoqc1fks\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_voice);\r\n        Toolbar toolbar = findViewById(R.id.toolbar);\r\n        setSupportActionBar(toolbar);\r\n\r\n        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);\r\n        NavigationView navigationView = findViewById(R.id.navigationView);\r\n\r\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(\r\n                this, drawerLayout, toolbar,\r\n                R.string.navigation_drawer_open, R.string.navigation_drawer_close);\r\n        drawerLayout.addDrawerListener(toggle);\r\n        toggle.syncState();\r\n\r\n        navigationView.setNavigationItemSelectedListener(item -> {\r\n            int id = item.getItemId();\r\n\r\n            if (id == R.id.nav_home) {\r\n                drawerLayout.closeDrawer(GravityCompat.START);\r\n            } else if (id == R.id.nav_team) {\r\n                Intent intent = new Intent(this, AboutAppActivity.class);\r\n                startActivity(intent);\r\n            } else if (id == R.id.nav_app) {\r\n                Intent intent = new Intent(this, AboutAppActivity.class);\r\n                startActivity(intent);\r\n            }\r\n\r\n            drawerLayout.closeDrawer(GravityCompat.START);\r\n            return true;\r\n        });\r\n\r\n        txtTo = findViewById(R.id.txtTo);\r\n        txtSubject = findViewById(R.id.txtSubject);\r\n        txtMessage = findViewById(R.id.txtMessage);\r\n        btnSpeak = findViewById(R.id.btnSpeak);\r\n\r\n        tts = new TextToSpeech(this, status -> {\r\n            if (status == TextToSpeech.SUCCESS)\r\n                tts.setLanguage(Locale.US);\r\n        });\r\n\r\n        btnSpeak.setOnClickListener(v -> promptEmail());\r\n        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);\r\n        bottomNav.setSelectedItemId(R.id.nav_voice);\r\n\r\n        bottomNav.setOnItemSelectedListener(item -> {\r\n            int itemId = item.getItemId();\r\n            if (itemId == R.id.nav_home) {\r\n                startActivity(new Intent(getApplicationContext(), MainActivity.class));\r\n                overridePendingTransition(0, 0);\r\n                return true;\r\n            } else if (itemId == R.id.nav_voice) {\r\n                return true;\r\n            } else if (itemId == R.id.nav_settings) {\r\n                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));\r\n                overridePendingTransition(0, 0);\r\n                return true;\r\n            }\r\n            return false;\r\n        });\r\n\r\n\r\n\r\n    }\r\n    private void shareAppLink() {\r\n        String shareBody = \"Check out this amazing Voice Email Sender app:\\n\\n\" +\r\n                \"https://drive.google.com/file/d/your_apk_file_id/view?usp=sharing\"; // \uD83D\uDD01 Replace with your APK link\r\n\r\n        Intent shareIntent = new Intent(Intent.ACTION_SEND);\r\n        shareIntent.setType(\"text/plain\");\r\n        shareIntent.putExtra(Intent.EXTRA_SUBJECT, \"Voice Email Sender App\");\r\n        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);\r\n        startActivity(Intent.createChooser(shareIntent, \"Share App via\"));\r\n    }\r\n\r\n    private void speak(String text) {\r\n        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);\r\n    }\r\n\r\n    private void promptEmail() {\r\n        speak(\"Please say the recipient's email address.\");\r\n        new Handler().postDelayed(() -> listen(REQ_EMAIL), 3000);\r\n    }\r\n\r\n    private void promptSubject() {\r\n        speak(\"Now say the subject of the email.\");\r\n        new Handler().postDelayed(() -> listen(REQ_SUBJECT), 3000);\r\n    }\r\n\r\n    private void promptWordCount() {\r\n        speak(\"How many words should the message be?\");\r\n        new Handler().postDelayed(() -> listen(REQ_WORDS), 3000);\r\n    }\r\n\r\n    private void promptGreeting() {\r\n        speak(\"Please say the greeting like Dear Mihir or Respected Sir.\");\r\n        new Handler().postDelayed(() -> listen(REQ_GREETING), 3000);\r\n    }\r\n\r\n    private void promptClosing() {\r\n        speak(\"Please say the closing like Sincerely Mihir or Thankfully Dip.\");\r\n        new Handler().postDelayed(() -> listen(REQ_CLOSING), 3000);\r\n    }\r\n\r\n    private void promptAttachmentConfirmation() {\r\n        speak(\"Is there any attachment? Please say Yes or No.\");\r\n        new Handler().postDelayed(() -> listen(REQ_ATTACHMENT_CONFIRM), 3000);\r\n    }\r\n\r\n    private void promptAttachmentPath() {\r\n        speak(\"Please say or paste the full path of the file to attach.\");\r\n        new Handler().postDelayed(() -> listen(REQ_ATTACHMENT_PATH), 3000);\r\n    }\r\n\r\n    private void listen(int requestCode) {\r\n        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);\r\n        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);\r\n        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());\r\n        try {\r\n            startActivityForResult(intent, requestCode);\r\n        } catch (ActivityNotFoundException a) {\r\n            Toast.makeText(getApplicationContext(), \"Speech not supported\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n        if (resultCode == RESULT_OK && data != null) {\r\n            ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);\r\n            if (result == null || result.isEmpty()) return;\r\n\r\n            switch (requestCode) {\r\n                case REQ_EMAIL:\r\n                    email = result.get(0)\r\n                            .replaceAll(\" \", \"\")\r\n                            .replace(\"attherate\", \"@\")\r\n                            .replace(\"at the rate\", \"@\")\r\n                            .replace(\"dot\", \".\");\r\n\r\n                    // Validate email using Android's built-in pattern\r\n                    if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {\r\n                        txtTo.setText(\"To: \" + email);\r\n                        promptSubject();\r\n                    } else {\r\n                        txtTo.setText(\"Invalid email: \" + email);\r\n                        speak(\"That doesn't seem like a valid email. Please try again.\");\r\n                        new Handler().postDelayed(() -> listen(REQ_EMAIL), 4000);\r\n                    }\r\n                    break;\r\n\r\n\r\n                case REQ_SUBJECT:\r\n                    subject = result.get(0);\r\n                    txtSubject.setText(\"Subject: \" + subject);\r\n                    promptWordCount();\r\n                    break;\r\n\r\n                case REQ_WORDS:\r\n                    try {\r\n                        wordCount = Integer.parseInt(result.get(0).replaceAll(\"[^0-9]\", \"\"));\r\n                    } catch (Exception e) {\r\n                        wordCount = 50;\r\n                    }\r\n                    promptGreeting();\r\n                    break;\r\n//greeting\r\n                case REQ_GREETING:\r\n                    greeting = result.get(0).trim();\r\n                    promptClosing();\r\n                    break;\r\n//closing\r\n                case REQ_CLOSING:\r\n                    closing = result.get(0).trim();\r\n                    promptAttachmentConfirmation();\r\n                    break;\r\n// attachment\r\n                case REQ_ATTACHMENT_CONFIRM:\r\n                    String confirmation = result.get(0).toLowerCase();\r\n                    if (confirmation.contains(\"yes\")) {\r\n                        isAttachmentRequired = true;\r\n                        promptAttachmentPath();\r\n                    } else {\r\n                        isAttachmentRequired = false;\r\n                        fetchAIMessage();\r\n                    }\r\n                    break;\r\n\r\n                case REQ_ATTACHMENT_PATH:\r\n                    attachmentPath = result.get(0).trim();\r\n                    fetchAIMessage();\r\n                    break;\r\n            }\r\n        }\r\n    }\r\n\r\n    private void fetchAIMessage() {\r\n        speak(\"Generating your email using Gemini AI. Please wait.\");\r\n        OkHttpClient client = new OkHttpClient();\r\n\r\n        String prompt = \"Write a professional email to \" + email +\r\n                \" on the subject: \" + subject +\r\n                \" in about \" + wordCount + \" words. \" +\r\n                \"Start the email with the greeting: '\" + greeting +\r\n                \"' and end with the closing: '\" + closing + \"'.\";\r\n\r\n        String jsonBody = \"{ \\\"contents\\\": [{ \\\"parts\\\": [{ \\\"text\\\": \\\"\" + prompt + \"\\\" }] }] }\";\r\n\r\n        RequestBody body = RequestBody.create(jsonBody, MediaType.parse(\"application/json\"));\r\n        Request request = new Request.Builder()\r\n                .url(\"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=\" + GEMINI_API_KEY)\r\n                .post(body)\r\n                .build();\r\n\r\n        client.newCall(request).enqueue(new Callback() {\r\n            @Override public void onFailure(Call call, IOException e) {\r\n                runOnUiThread(() -> {\r\n                    speak(\"Failed to connect to Gemini.\");\r\n                    txtMessage.setText(\"Connection Error: \" + e.getMessage());\r\n                });\r\n            }\r\n\r\n            @Override public void onResponse(Call call, Response response) throws IOException {\r\n                String responseData = Objects.requireNonNull(response.body()).string();\r\n                Log.d(\"GEMINI_RESPONSE\", responseData);\r\n\r\n                try {\r\n                    JSONObject obj = new JSONObject(responseData);\r\n                    if (obj.has(\"error\")) {\r\n                        String errorMsg = obj.getJSONObject(\"error\").optString(\"message\", \"Unknown error\");\r\n                        throw new Exception(\"Gemini Error: \" + errorMsg);\r\n                    }\r\n\r\n                    JSONArray candidates = obj.getJSONArray(\"candidates\");\r\n                    JSONObject content = candidates.getJSONObject(0).getJSONObject(\"content\");\r\n                    JSONArray parts = content.getJSONArray(\"parts\");\r\n                    message = parts.getJSONObject(0).getString(\"text\");\r\n\r\n                    runOnUiThread(() -> {\r\n                        txtMessage.setText(\"Message:\\n\" + message);\r\n                        speak(\"Email is ready. It will be sent in 15 seconds.\");\r\n                        new Handler().postDelayed(VoiceActivity.this::sendEmail, 15000);\r\n                    });\r\n\r\n                } catch (Exception e) {\r\n                    runOnUiThread(() -> {\r\n                        speak(\"Error reading AI response.\");\r\n                        txtMessage.setText(\"Parsing Error: \" + e.getMessage() + \"\\nRaw:\\n\" + responseData);\r\n                    });\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    private void sendEmail() {\r\n        if (email != null && subject != null && message != null) {\r\n            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);\r\n\r\n            if (account == null) {\r\n                Toast.makeText(this, \"User not signed in with Google\", Toast.LENGTH_SHORT).show();\r\n                return;\r\n            }\r\n\r\n            // ✅ Show a message before sending\r\n            Toast.makeText(this, \"Sending email via Gmail API...\", Toast.LENGTH_SHORT).show();\r\n\r\n            // ✅ Send using GmailSender\r\n            GmailSender.sendEmail(VoiceActivity.this, account, email, subject, message);\r\n        } else {\r\n            Toast.makeText(this, \"Please complete voice input first.\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void onDestroy() {\r\n        if (tts != null) {\r\n            tts.stop();\r\n            tts.shutdown();\r\n        }\r\n        super.onDestroy();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/voicemailsender/VoiceActivity.java b/app/src/main/java/com/example/voicemailsender/VoiceActivity.java
+--- a/app/src/main/java/com/example/voicemailsender/VoiceActivity.java	(revision 104ffa68580598ad7f65b5cf37975ce2fdf1a7f7)
++++ b/app/src/main/java/com/example/voicemailsender/VoiceActivity.java	(date 1752226803909)
+@@ -9,6 +9,7 @@
+ import android.speech.tts.TextToSpeech;
+ import android.util.Log;
+ import android.widget.Button;
++import android.widget.ImageButton;
+ import android.widget.TextView;
+ import android.widget.Toast;
+ 
+@@ -47,7 +48,8 @@
+ 
+     private TextToSpeech tts;
+     private TextView txtTo, txtSubject, txtMessage;
+-    private Button btnSpeak;
++    private ImageButton btnSpeak;
++
+ 
+     private String email = "", subject = "", message = "";
+     private String greeting = "", closing = "", attachmentPath = "";
+@@ -75,13 +77,14 @@
+         navigationView.setNavigationItemSelectedListener(item -> {
+             int id = item.getItemId();
+ 
++            Intent intent = null;
+             if (id == R.id.nav_home) {
+                 drawerLayout.closeDrawer(GravityCompat.START);
+-            } else if (id == R.id.nav_team) {
+-                Intent intent = new Intent(this, AboutAppActivity.class);
++            } else if (id == R.id.nav_inbox) {
++                startActivity(new Intent(VoiceActivity.this, InboxActivity.class));
+                 startActivity(intent);
+             } else if (id == R.id.nav_app) {
+-                Intent intent = new Intent(this, AboutAppActivity.class);
++                intent = new Intent(this, AboutAppActivity.class);
+                 startActivity(intent);
+             }
+ 
+@@ -92,7 +95,7 @@
+         txtTo = findViewById(R.id.txtTo);
+         txtSubject = findViewById(R.id.txtSubject);
+         txtMessage = findViewById(R.id.txtMessage);
+-        btnSpeak = findViewById(R.id.btnSpeak);
++        btnSpeak = findViewById(R.id.voiceButton);
+ 
+         tts = new TextToSpeech(this, status -> {
+             if (status == TextToSpeech.SUCCESS)

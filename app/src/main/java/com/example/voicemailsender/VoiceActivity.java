@@ -2,13 +2,11 @@ package com.example.voicemailsender;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +26,6 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -50,18 +47,18 @@ public class VoiceActivity extends AppCompatActivity {
     private TextView txtTo, txtSubject, txtMessage;
     private ImageButton btnSpeak;
 
-
     private String email = "", subject = "", message = "";
     private String greeting = "", closing = "", attachmentPath = "";
     private int wordCount = 50;
     private boolean isAttachmentRequired = false;
 
-    private final String GEMINI_API_KEY = "AIzaSyBAbHtk5n-mtcQfPOsclzS9hlNFoqc1fks";
+    private final String GEMINI_API_KEY = "YOUR_API_KEY_HERE"; // 🔒 Replace with your real API key
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -76,18 +73,11 @@ public class VoiceActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
-
-            Intent intent = null;
             if (id == R.id.nav_home) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            } else if (id == R.id.nav_inbox) {
-                startActivity(new Intent(VoiceActivity.this, InboxActivity.class));
-                startActivity(intent);
+                startActivity(new Intent(this, MainActivity.class));
             } else if (id == R.id.nav_app) {
-                intent = new Intent(this, AboutAppActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, AboutAppActivity.class));
             }
-
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
@@ -98,42 +88,35 @@ public class VoiceActivity extends AppCompatActivity {
         btnSpeak = findViewById(R.id.voiceButton);
 
         tts = new TextToSpeech(this, status -> {
-            if (status == TextToSpeech.SUCCESS)
+            if (status == TextToSpeech.SUCCESS) {
                 tts.setLanguage(Locale.US);
+            }
         });
 
         btnSpeak.setOnClickListener(v -> promptEmail());
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_voice);
 
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                overridePendingTransition(0, 0);
+            if (itemId == R.id.nav_voice) {
                 return true;
-            } else if (itemId == R.id.nav_voice) {
+            } else if (itemId == R.id.nav_home) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish(); // ✅ THIS IS REQUIRED
                 return true;
             } else if (itemId == R.id.nav_settings) {
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                overridePendingTransition(0, 0);
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                finish(); // ✅ THIS TOO
                 return true;
             }
             return false;
         });
 
 
-
-    }
-    private void shareAppLink() {
-        String shareBody = "Check out this amazing Voice Email Sender app:\n\n" +
-                "https://drive.google.com/file/d/your_apk_file_id/view?usp=sharing"; // 🔁 Replace with your APK link
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Voice Email Sender App");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(shareIntent, "Share App via"));
     }
 
     private void speak(String text) {
@@ -156,12 +139,12 @@ public class VoiceActivity extends AppCompatActivity {
     }
 
     private void promptGreeting() {
-        speak("Please say the greeting like Dear Mihir or Respected Sir.");
+        speak("Please say the greeting like Dear or Respected Sir or Maam.");
         new Handler().postDelayed(() -> listen(REQ_GREETING), 3000);
     }
 
     private void promptClosing() {
-        speak("Please say the closing like Sincerely Mihir or Thankfully Dip.");
+        speak("Please say the closing like Sincerely or Thankfully.");
         new Handler().postDelayed(() -> listen(REQ_CLOSING), 3000);
     }
 
@@ -182,7 +165,7 @@ public class VoiceActivity extends AppCompatActivity {
         try {
             startActivityForResult(intent, requestCode);
         } catch (ActivityNotFoundException a) {
-            Toast.makeText(getApplicationContext(), "Speech not supported", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Speech not supported", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -200,8 +183,6 @@ public class VoiceActivity extends AppCompatActivity {
                             .replace("attherate", "@")
                             .replace("at the rate", "@")
                             .replace("dot", ".");
-
-                    // Validate email using Android's built-in pattern
                     if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                         txtTo.setText("To: " + email);
                         promptSubject();
@@ -211,14 +192,11 @@ public class VoiceActivity extends AppCompatActivity {
                         new Handler().postDelayed(() -> listen(REQ_EMAIL), 4000);
                     }
                     break;
-
-
                 case REQ_SUBJECT:
                     subject = result.get(0);
                     txtSubject.setText("Subject: " + subject);
                     promptWordCount();
                     break;
-
                 case REQ_WORDS:
                     try {
                         wordCount = Integer.parseInt(result.get(0).replaceAll("[^0-9]", ""));
@@ -227,17 +205,14 @@ public class VoiceActivity extends AppCompatActivity {
                     }
                     promptGreeting();
                     break;
-//greeting
                 case REQ_GREETING:
                     greeting = result.get(0).trim();
                     promptClosing();
                     break;
-//closing
                 case REQ_CLOSING:
                     closing = result.get(0).trim();
                     promptAttachmentConfirmation();
                     break;
-// attachment
                 case REQ_ATTACHMENT_CONFIRM:
                     String confirmation = result.get(0).toLowerCase();
                     if (confirmation.contains("yes")) {
@@ -248,7 +223,6 @@ public class VoiceActivity extends AppCompatActivity {
                         fetchAIMessage();
                     }
                     break;
-
                 case REQ_ATTACHMENT_PATH:
                     attachmentPath = result.get(0).trim();
                     fetchAIMessage();
@@ -285,18 +259,13 @@ public class VoiceActivity extends AppCompatActivity {
 
             @Override public void onResponse(Call call, Response response) throws IOException {
                 String responseData = Objects.requireNonNull(response.body()).string();
-                Log.d("GEMINI_RESPONSE", responseData);
-
                 try {
                     JSONObject obj = new JSONObject(responseData);
-                    if (obj.has("error")) {
-                        String errorMsg = obj.getJSONObject("error").optString("message", "Unknown error");
-                        throw new Exception("Gemini Error: " + errorMsg);
-                    }
+                    JSONArray parts = obj.getJSONArray("candidates")
+                            .getJSONObject(0)
+                            .getJSONObject("content")
+                            .getJSONArray("parts");
 
-                    JSONArray candidates = obj.getJSONArray("candidates");
-                    JSONObject content = candidates.getJSONObject(0).getJSONObject("content");
-                    JSONArray parts = content.getJSONArray("parts");
                     message = parts.getJSONObject(0).getString("text");
 
                     runOnUiThread(() -> {
@@ -318,17 +287,12 @@ public class VoiceActivity extends AppCompatActivity {
     private void sendEmail() {
         if (email != null && subject != null && message != null) {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
             if (account == null) {
                 Toast.makeText(this, "User not signed in with Google", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // ✅ Show a message before sending
             Toast.makeText(this, "Sending email via Gmail API...", Toast.LENGTH_SHORT).show();
-
-            // ✅ Send using GmailSender
-            GmailSender.sendEmail(VoiceActivity.this, account, email, subject, message);
+            GmailSender.sendEmail(this, account, email, subject, message);
         } else {
             Toast.makeText(this, "Please complete voice input first.", Toast.LENGTH_SHORT).show();
         }

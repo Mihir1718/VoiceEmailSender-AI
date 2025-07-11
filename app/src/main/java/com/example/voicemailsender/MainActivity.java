@@ -2,16 +2,18 @@ package com.example.voicemailsender;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Patterns;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -19,25 +21,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button btnSpeak, btnSendEmail;
-    private TextView tvResult;
+    private TextView tvEmail, tvSubject, tvMessage;
 
     private int step = 0;
     private String email = "", subject = "", message = "";
@@ -47,9 +40,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // ✅ Initialize views AFTER setContentView
+        tvEmail = findViewById(R.id.tvEmail);
+        tvSubject = findViewById(R.id.tvSubject);
+        tvMessage = findViewById(R.id.tvMessage);
+        ImageButton btnSpeak = findViewById(R.id.btnSpeak);
+        ImageButton btnSendEmail = findViewById(R.id.btnSendEmail);
+
+
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
         boolean darkMode = prefs.getBoolean("dark_mode", false);
-
         AppCompatDelegate.setDefaultNightMode(
                 darkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
         );
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        );
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -80,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        btnSpeak = findViewById(R.id.btnSpeak);
-        btnSendEmail = findViewById(R.id.btnSendEmail);
-        tvResult = findViewById(R.id.tvResult);
+        tvEmail.setText("To: ");
+        tvSubject.setText("Subject: ");
+        tvMessage.setText("");
 
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
@@ -113,20 +115,21 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.nav_voice) {
-                startActivity(new Intent(getApplicationContext(), VoiceActivity.class));
-                overridePendingTransition(0, 0);
+                startActivity(new Intent(this, VoiceActivity.class));
+                finish(); // ✅ Prevent Voice and Main overlapping
                 return true;
             } else if (itemId == R.id.nav_settings) {
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                overridePendingTransition(0, 0);
+                startActivity(new Intent(this, SettingsActivity.class));
+                finish();
                 return true;
             }
             return false;
         });
+
+
+
     }
 
     private void promptAndSpeak() {
@@ -174,7 +177,10 @@ public class MainActivity extends AppCompatActivity {
             if (result != null && !result.isEmpty()) {
                 switch (step) {
                     case 0:
-                        email = result.get(0).toLowerCase().replaceAll("\\s+", "").replace("attherate", "@").replace("dot", ".");
+                        email = result.get(0).toLowerCase().replaceAll("\\s+", "").replace("attherate", "@").replace("dot", ".").replace("mirror","miral" +
+                                "" +
+                                "" +
+                                "");
                         Toast.makeText(this, "Email: " + email, Toast.LENGTH_SHORT).show();
                         step++;
                         promptAndSpeak();
@@ -190,7 +196,9 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(this, "Message: " + message, Toast.LENGTH_SHORT).show();
                         break;
                 }
-                tvResult.setText(String.format("Email: %s\n\nSubject: %s\n\nMessage: \n%s", email, subject, message));
+                tvEmail.setText("To: " + email);
+                tvSubject.setText("Subject: " + subject);
+                tvMessage.setText(message);
             }
         }
     }
@@ -208,19 +216,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // ✅ Show a message before sending
             Toast.makeText(this, "Sending email via Gmail API...", Toast.LENGTH_SHORT).show();
-
-            // ✅ Send using GmailSender
             GmailSender.sendEmail(MainActivity.this, account, email, subject, message);
         } else {
             Toast.makeText(this, "Please complete voice input first.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-
 
     @Override
     protected void onDestroy() {

@@ -74,25 +74,26 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         });
 
-        // -------- Bottom Navigation --------
-        bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setSelectedItemId(R.id.nav_settings);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        bottomNav.setSelectedItemId(R.id.nav_settings); // ✅ Highlight this tab
 
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            if (itemId == R.id.nav_settings) {
+                return true; // Already here
+            } else if (itemId == R.id.nav_home) {
+                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.nav_voice) {
-                startActivity(new Intent(getApplicationContext(), VoiceActivity.class));
+                startActivity(new Intent(SettingsActivity.this, VoiceActivity.class));
                 overridePendingTransition(0, 0);
-                return true;
-            } else if (itemId == R.id.nav_settings) {
                 return true;
             }
             return false;
         });
+
 
         // -------- Views --------
         switchNotifications = findViewById(R.id.switchNotifications);
@@ -127,7 +128,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // -------- Visit Website --------
         btnVisitWebsite.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://yourwebsite.com"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://deep-2510.github.io/A-W-devloper/"));
             startActivity(intent);
         });
 
